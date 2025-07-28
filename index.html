@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Aviator</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; }
+    #resultado { margin-top: 1rem; padding: 1rem; border: 1px solid #ccc; border-radius: 8px; }
+    button { padding: 0.5rem 1rem; font-size: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>Painel Aviator - Netlify</h1>
+  <button onclick="buscarDados()">Atualizar Dados</button>
+  <div id="resultado">Clique em "Atualizar Dados" para obter o resultado.</div>
+
+  <script>
+    async function buscarDados() {
+      const resEl = document.getElementById('resultado');
+      resEl.textContent = 'Carregando...';
+
+      try {
+        const response = await fetch('/.netlify/functions/aviator');
+        const data = await response.json();
+        resEl.textContent = JSON.stringify(data);
+      } catch (error) {
+        resEl.textContent = 'Erro ao buscar dados: ' + error;
+      }
+    }
+  </script>
+</body>
+</html>
