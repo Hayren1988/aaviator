@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Aviator Inteligente - Bet7K</title>
+    <title>Painel Aviator Inteligente - Multi-IA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/locale/pt-br.min.js"></script>
     <style>
         :root {
             --primary: #191B32;
@@ -19,6 +20,11 @@
             --info: #17a2b8;
             --bg: #0d0d0d;
             --exploit: #ff6ec7;
+            --panel-bg: rgba(25, 27, 50, 0.8);
+            --ia-1: #6a11cb;
+            --ia-2: #2575fc;
+            --ia-3: #00c6fb;
+            --ia-4: #00ff88;
         }
         
         * {
@@ -37,6 +43,7 @@
                 radial-gradient(circle at 90% 80%, rgba(214, 237, 22, 0.05) 0%, transparent 20%);
             overflow-x: hidden;
             position: relative;
+            padding: 20px;
         }
         
         body::before {
@@ -54,17 +61,16 @@
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
         }
         
         header {
             text-align: center;
             margin-bottom: 20px;
-            padding: 20px;
-            background: rgba(5, 7, 29, 0.8);
+            padding: 25px;
+            background: rgba(5, 7, 29, 0.9);
             border-radius: 15px;
             border: 2px solid var(--accent);
-            box-shadow: 0 0 20px rgba(214, 237, 22, 0.3);
+            box-shadow: 0 0 30px rgba(214, 237, 22, 0.3);
             position: relative;
             overflow: hidden;
         }
@@ -76,7 +82,7 @@
             left: 0;
             width: 100%;
             height: 5px;
-            background: linear-gradient(90deg, var(--accent), var(--success), var(--info), var(--exploit));
+            background: linear-gradient(90deg, var(--ia-1), var(--ia-2), var(--ia-3), var(--ia-4));
         }
         
         h1 {
@@ -101,6 +107,8 @@
         .status-bar {
             display: flex;
             justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
             margin-bottom: 20px;
             padding: 15px;
             background: rgba(25, 27, 50, 0.6);
@@ -112,6 +120,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            font-size: 1.1rem;
         }
         
         .status-dot {
@@ -130,6 +139,7 @@
         .server-info {
             display: flex;
             gap: 20px;
+            flex-wrap: wrap;
         }
         
         .server-item {
@@ -163,7 +173,7 @@
         }
         
         .panel {
-            background: rgba(25, 27, 50, 0.7);
+            background: var(--panel-bg);
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -636,13 +646,192 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #b8d012;
         }
+        
+        .ai-correction {
+            background: rgba(0, 255, 136, 0.1);
+            border-left: 3px solid var(--success);
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+        
+        .ai-correction h3 {
+            color: var(--success);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .prediction-history {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+        
+        .prediction-item {
+            min-width: 80px;
+            padding: 10px;
+            background: rgba(25, 27, 50, 0.8);
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid rgba(214, 237, 22, 0.2);
+        }
+        
+        .prediction-multiplier {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+        
+        .prediction-time {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+        
+        .accuracy-indicator {
+            height: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .accuracy-fill {
+            height: 100%;
+            background: var(--success);
+        }
+        
+        .ia-panel {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .ia-card {
+            background: rgba(25, 27, 50, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid;
+            transition: transform 0.3s;
+        }
+        
+        .ia-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .ia-card-1 {
+            border-color: var(--ia-1);
+        }
+        
+        .ia-card-2 {
+            border-color: var(--ia-2);
+        }
+        
+        .ia-card-3 {
+            border-color: var(--ia-3);
+        }
+        
+        .ia-card-4 {
+            border-color: var(--ia-4);
+        }
+        
+        .ia-card h4 {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .ia-name {
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+        
+        .ia-value {
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin: 5px 0;
+        }
+        
+        .ia-accuracy {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .ia-accuracy-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+        
+        .ia-1 .ia-accuracy-fill {
+            background: var(--ia-1);
+            width: 92%;
+        }
+        
+        .ia-2 .ia-accuracy-fill {
+            background: var(--ia-2);
+            width: 88%;
+        }
+        
+        .ia-3 .ia-accuracy-fill {
+            background: var(--ia-3);
+            width: 85%;
+        }
+        
+        .ia-4 .ia-accuracy-fill {
+            background: var(--ia-4);
+            width: 90%;
+        }
+        
+        .ia-status {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            color: #aaa;
+        }
+        
+        .correction-system {
+            background: rgba(255, 204, 0, 0.1);
+            border-left: 3px solid var(--warning);
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+        
+        .correction-system h3 {
+            color: var(--warning);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .correction-progress {
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .correction-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--warning), var(--accent));
+            width: 0;
+            transition: width 0.5s ease;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-rocket"></i> PAINEL AVIATOR - BET7K</h1>
-            <p class="subtitle">Sistema Inteligente de Previsão em Tempo Real - Conectado ao servidor da Bet7K para análise precisa do próximo resultado</p>
+            <h1><i class="fas fa-brain"></i> PAINEL AVIATOR - MULTI-IA</h1>
+            <p class="subtitle">Sistema Inteligente com 4 IAs Integradas - Análise em Tempo Real com Precisão Extrema</p>
         </header>
         
         <div class="status-bar">
@@ -663,6 +852,10 @@
                     <i class="fas fa-bolt"></i>
                     <span>Latência: <span class="server-value">42ms</span></span>
                 </div>
+                <div class="server-item">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Atualização: <span class="server-value" id="update-time">15s</span></span>
+                </div>
             </div>
         </div>
         
@@ -670,13 +863,13 @@
             <h2 class="alert-title"><i class="fas fa-bell"></i> PRÓXIMO RESULTADO PREVISTO</h2>
             <div class="prediction-display" id="prediction-value">3.8x</div>
             <div class="confidence">
-                Confiança da previsão: <span class="confidence-value" id="confidence-value">76%</span>
+                Confiança da previsão: <span class="confidence-value" id="confidence-value">94%</span>
             </div>
-            <p>Padrão detectado: Sequência de baixas (3x &lt; 1.5) - Alta probabilidade de resultado acima de 3x</p>
+            <p>Consenso entre IAs: 3/4 IAs indicam resultado acima de 3.5x</p>
             
             <div class="prediction-accuracy">
-                <div class="accuracy-bar" style="width: 76%"></div>
-                <div class="accuracy-value">76%</div>
+                <div class="accuracy-bar" style="width: 94%"></div>
+                <div class="accuracy-value">94%</div>
             </div>
         </div>
         
@@ -688,18 +881,53 @@
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-title">Multiplicador Atual</div>
-                        <div class="stat-value current-value">1.24x</div>
+                        <div class="stat-value current-value" id="current-value">1.24x</div>
                         <div class="stat-title">Último registrado</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-title">Previsão Próximo</div>
-                        <div class="stat-value prediction-value">3.8x</div>
+                        <div class="stat-value prediction-value" id="next-prediction">3.8x</div>
                         <div class="stat-title">Estimativa</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-title">Volatilidade</div>
-                        <div class="stat-value volatility-value">38%</div>
+                        <div class="stat-value volatility-value" id="volatility">28%</div>
                         <div class="stat-title">Índice de risco</div>
+                    </div>
+                </div>
+                
+                <div class="ia-panel">
+                    <div class="ia-card ia-card-1 ia-1">
+                        <div class="ia-name">NeuralNet Pro</div>
+                        <div class="ia-value">3.7x</div>
+                        <div class="ia-accuracy">
+                            <div class="ia-accuracy-fill"></div>
+                        </div>
+                        <div class="ia-status">92% de precisão</div>
+                    </div>
+                    <div class="ia-card ia-card-2 ia-2">
+                        <div class="ia-name">DeepPredictor</div>
+                        <div class="ia-value">3.9x</div>
+                        <div class="ia-accuracy">
+                            <div class="ia-accuracy-fill"></div>
+                        </div>
+                        <div class="ia-status">88% de precisão</div>
+                    </div>
+                    <div class="ia-card ia-card-3 ia-3">
+                        <div class="ia-name">QuantumAI</div>
+                        <div class="ia-value">3.6x</div>
+                        <div class="ia-accuracy">
+                            <div class="ia-accuracy-fill"></div>
+                        </div>
+                        <div class="ia-status">85% de precisão</div>
+                    </div>
+                    <div class="ia-card ia-card-4 ia-4">
+                        <div class="ia-name">SynapseX</div>
+                        <div class="ia-value">4.1x</div>
+                        <div class="ia-accuracy">
+                            <div class="ia-accuracy-fill"></div>
+                        </div>
+                        <div class="ia-status">90% de precisão</div>
                     </div>
                 </div>
             </div>
@@ -709,37 +937,38 @@
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-title">Média Recente</div>
-                        <div class="stat-value">1.98x</div>
+                        <div class="stat-value" id="average">1.98x</div>
                         <div class="stat-title">Últimas 10 rodadas</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-title">Máximo Recente</div>
-                        <div class="stat-value">5.67x</div>
+                        <div class="stat-value" id="max-value">5.67x</div>
                         <div class="stat-title">Últimas 20 rodadas</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-title">Padrão Detectado</div>
-                        <div class="stat-value">Pós-Baixa</div>
+                        <div class="stat-value" id="pattern">Pós-Baixa</div>
                         <div class="stat-title">Tendência atual</div>
                     </div>
                 </div>
                 
-                <div class="pattern-analysis">
-                    <div class="pattern-card">
-                        <h4>Padrão Pós-Baixa</h4>
-                        <div class="pattern-value pattern-success">84%</div>
-                        <div>Taxa de acerto</div>
+                <div class="ai-correction">
+                    <h3><i class="fas fa-robot"></i> CORREÇÃO IA EM TEMPO REAL</h3>
+                    <p id="ai-status">Analisando padrões históricos para ajustar algoritmo...</p>
+                </div>
+                
+                <div class="correction-system">
+                    <h3><i class="fas fa-wrench"></i> SISTEMA DE AUTO-CORREÇÃO</h3>
+                    <p>Otimizando pesos das IAs com base no desempenho recente</p>
+                    <div class="correction-progress">
+                        <div class="correction-fill" id="correction-fill"></div>
                     </div>
-                    <div class="pattern-card">
-                        <h4>Sequência Alta</h4>
-                        <div class="pattern-value pattern-danger">12%</div>
-                        <div>Probabilidade atual</div>
-                    </div>
-                    <div class="pattern-card">
-                        <h4>Precisão RNG</h4>
-                        <div class="pattern-value pattern-success">76%</div>
-                        <div>Previsão do sistema</div>
-                    </div>
+                    <p id="correction-status">Progresso: 0%</p>
+                </div>
+                
+                <h3 style="margin-top: 20px;"><i class="fas fa-history"></i> HISTÓRICO DE PREVISÕES</h3>
+                <div class="prediction-history" id="prediction-history">
+                    <!-- Preenchido por JavaScript -->
                 </div>
             </div>
             
@@ -760,6 +989,10 @@
                         <i class="fas fa-check-circle" style="color: var(--success);"></i> 
                         Conectado ao jogo Aviator via: 
                         <strong>https://7k.bet.br/games/spribe/aviator</strong>
+                    </div>
+                    <div class="exploit-info" style="margin-top: 10px;">
+                        <i class="fas fa-microchip"></i> 
+                        Modo de análise: <strong>4 IAs em tempo real</strong>
                     </div>
                 </div>
             </div>
@@ -799,14 +1032,14 @@
                 
                 <div class="exploit-controls">
                     <div class="exploit-indicator">
-                        <div class="exploit-progress" id="exploit-progress" style="width: 86%;"></div>
+                        <div class="exploit-progress" id="exploit-progress" style="width: 92%;"></div>
                     </div>
                     <button class="btn-exploit" id="exploit">
                         <i class="fas fa-bolt"></i> Otimizar Exploit
                     </button>
                 </div>
                 <div class="exploit-info">
-                    <i class="fas fa-info-circle"></i> O sistema está operando com 86ms de vantagem sobre o jogo
+                    <i class="fas fa-info-circle"></i> O sistema está operando com 92ms de vantagem sobre o jogo
                 </div>
             </div>
         </div>
@@ -817,43 +1050,25 @@
                 <div class="log-entry">
                     <div class="log-time">14:35:22</div>
                     <div class="log-message">
-                        <span class="log-type exploit">EXPLOIT: Resultado detectado 86ms antes com sucesso</span>
+                        <span class="log-type exploit">IA: NeuralNet Pro prevê 3.7x com 92% de confiança</span>
                     </div>
                 </div>
                 <div class="log-entry">
                     <div class="log-time">14:35:15</div>
                     <div class="log-message">
-                        <span class="log-type data">Padrão detectado: Sequência de baixas (3x &lt; 1.5)</span>
+                        <span class="log-type data">IA: DeepPredictor detectou padrão de alta (89% confiança)</span>
                     </div>
                 </div>
                 <div class="log-entry">
                     <div class="log-time">14:35:10</div>
                     <div class="log-message">
-                        <span class="log-type alert">Previsão atualizada: 3.8x com 76% de confiança</span>
+                        <span class="log-type alert">CONSENSO: Previsão final definida em 3.8x</span>
                     </div>
                 </div>
                 <div class="log-entry">
                     <div class="log-time">14:35:05</div>
                     <div class="log-message">
-                        <span class="log-type exploit">Ciclo RNG identificado - Fase 5/8</span>
-                    </div>
-                </div>
-                <div class="log-entry">
-                    <div class="log-time">14:35:00</div>
-                    <div class="log-message">
-                        <span class="log-type data">Resultado recebido: 1.24x</span>
-                    </div>
-                </div>
-                <div class="log-entry">
-                    <div class="log-time">14:34:55</div>
-                    <div class="log-message">
-                        <span class="log-type data">Previsão: 1.30x | Real: 1.24x | Dif: 4.6%</span>
-                    </div>
-                </div>
-                <div class="log-entry">
-                    <div class="log-time">14:34:50</div>
-                    <div class="log-message">
-                        <span class="log-type">Sincronização com o servidor estabelecida</span>
+                        <span class="log-type">Sistema de correção: Ajustando pesos das IAs</span>
                     </div>
                 </div>
             </div>
@@ -869,13 +1084,13 @@
                     <i class="fas fa-download"></i> Exportar Dados
                 </button>
                 <button class="btn-exploit" id="optimize">
-                    <i class="fas fa-brain"></i> Otimizar Algoritmo
+                    <i class="fas fa-brain"></i> Otimizar IAs
                 </button>
             </div>
         </div>
         
         <div class="footer">
-            <p>Sistema de análise em tempo real - Painel Aviator Inteligente v2.0 | Conectado ao servidor da Bet7K</p>
+            <p>Sistema de análise em tempo real - Painel Aviator Multi-IA v3.0 | Conectado ao servidor da Bet7K</p>
             <p>Este é um sistema de simulação para fins educacionais - Não possui conexão real com serviços de terceiros</p>
         </div>
     </div>
@@ -890,12 +1105,21 @@
             monitoring: true,
             monitoringInterval: null,
             connectionMethod: "Exploit",
-            exploitProgress: 86,
+            exploitProgress: 92,
             serverLocation: {
                 lat: -23.66389,
                 lng: -46.53833,
                 ip: "45.181.62.87"
-            }
+            },
+            chart: null,
+            updateInterval: 15000, // 15 segundos
+            iaModels: [
+                { name: "NeuralNet Pro", value: 3.7, accuracy: 92, color: "#6a11cb" },
+                { name: "DeepPredictor", value: 3.9, accuracy: 88, color: "#2575fc" },
+                { name: "QuantumAI", value: 3.6, accuracy: 85, color: "#00c6fb" },
+                { name: "SynapseX", value: 4.1, accuracy: 90, color: "#00ff88" }
+            ],
+            correctionProgress: 0
         };
 
         // Inicializar gráfico principal
@@ -939,7 +1163,7 @@
                     }
                 },
                 xaxis: {
-                    categories: ['14:30', '14:31', '14:32', '14:33', '14:34', '14:35', '14:36', '14:37', '14:38', '14:39'],
+                    categories: Array(10).fill().map((_, i) => moment().subtract(10 - i, 'minutes').format('HH:mm')),
                     labels: {
                         style: {
                             colors: '#aaa'
@@ -979,9 +1203,35 @@
                 }
             };
 
-            const chart = new ApexCharts(document.querySelector("#main-chart"), options);
-            chart.render();
-            return chart;
+            state.chart = new ApexCharts(document.querySelector("#main-chart"), options);
+            state.chart.render();
+        }
+
+        // Atualizar histórico de previsões
+        function updatePredictionHistory() {
+            const container = document.getElementById('prediction-history');
+            container.innerHTML = '';
+            
+            // Pegar as últimas 5 previsões
+            const recentPredictions = state.predictions.slice(-5);
+            
+            recentPredictions.forEach(pred => {
+                const accuracy = Math.round(pred.confidence * 100);
+                const time = moment().format('HH:mm');
+                
+                const predElement = document.createElement('div');
+                predElement.className = 'prediction-item';
+                predElement.innerHTML = `
+                    <div class="prediction-time">${time}</div>
+                    <div class="prediction-multiplier">${pred.value.toFixed(2)}x</div>
+                    <div class="accuracy-indicator">
+                        <div class="accuracy-fill" style="width: ${accuracy}%"></div>
+                    </div>
+                    <div>${accuracy}%</div>
+                `;
+                
+                container.prepend(predElement);
+            });
         }
 
         // Simular novo resultado
@@ -1012,43 +1262,53 @@
             // Adicionar log
             addLog(`Resultado simulado: ${newResult.toFixed(2)}x`, "data");
             
-            // Adicionar log de comparação com previsão
-            if (state.predictions.length > 0) {
-                const prevPrediction = state.predictions[state.predictions.length - 1];
-                if (prevPrediction) {
-                    const diff = Math.abs(prevPrediction.value - newResult);
-                    const accuracy = 100 - (diff / prevPrediction.value * 100);
-                    addLog(`Previsão: ${prevPrediction.value.toFixed(2)}x | Real: ${newResult.toFixed(2)}x | Dif: ${diff.toFixed(2)} (${accuracy.toFixed(1)}%)`, "exploit");
-                }
-            }
-            
             // Adicionar a nova previsão para o próximo resultado
             state.predictions.push(prediction);
+            
+            // Atualizar histórico de previsões
+            updatePredictionHistory();
+            
+            // Atualizar gráfico
+            updateChart();
+            
+            // Atualizar IAs
+            updateIAPredictions();
         }
 
-        // Analisar dados e fazer previsão
+        // Analisar dados e fazer previsão com IA
         function analyzeData() {
             if (state.results.length < 5) return null;
             
             const lastResult = state.results[state.results.length - 1];
             let prediction, confidence, volatility;
             
+            // Calcular consenso entre IAs
+            const iaValues = state.iaModels.map(ia => ia.value);
+            const avgPrediction = iaValues.reduce((a, b) => a + b, 0) / iaValues.length;
+            
+            prediction = avgPrediction;
+            confidence = 0.94;
+            volatility = 0.28;
+            
             // Detectar padrão pós-baixa
             if (state.results.slice(-3).every(r => r < 1.5)) {
-                prediction = 3.8 + (Math.random() * 1.5);
-                confidence = 0.76 + (Math.random() * 0.1);
-                volatility = 0.35 + (Math.random() * 0.1);
+                document.getElementById('pattern').textContent = "Pós-Baixa";
             } 
             // Detectar sequência de altas
             else if (state.results.slice(-2).every(r => r > 3)) {
-                prediction = 1.2 + (Math.random() * 0.8);
-                confidence = 0.65 + (Math.random() * 0.1);
-                volatility = 0.25 + (Math.random() * 0.1);
+                document.getElementById('pattern').textContent = "Pós-Alta";
             } else {
-                prediction = 1.5 + (Math.random() * 2);
-                confidence = 0.7 + (Math.random() * 0.1);
-                volatility = 0.4 + (Math.random() * 0.1);
+                document.getElementById('pattern').textContent = "Estável";
             }
+            
+            // Calcular estatísticas
+            const lastTen = state.results.slice(-10);
+            const average = lastTen.reduce((a, b) => a + b, 0) / lastTen.length;
+            document.getElementById('average').textContent = average.toFixed(2);
+            
+            const lastTwenty = state.results.slice(-20);
+            const max = Math.max(...lastTwenty);
+            document.getElementById('max-value').textContent = max.toFixed(2);
             
             return {
                 value: parseFloat(prediction.toFixed(2)),
@@ -1057,22 +1317,75 @@
             };
         }
 
+        // Atualizar previsões das IAs individuais
+        function updateIAPredictions() {
+            const lastResult = state.results[state.results.length - 1];
+            
+            state.iaModels.forEach((ia, index) => {
+                let newValue;
+                
+                if (index === 0) {
+                    // NeuralNet Pro
+                    newValue = 3.5 + Math.random() * 1.5;
+                } else if (index === 1) {
+                    // DeepPredictor
+                    newValue = 3.2 + Math.random() * 1.8;
+                } else if (index === 2) {
+                    // QuantumAI
+                    newValue = 3.0 + Math.random() * 1.5;
+                } else {
+                    // SynapseX
+                    newValue = 3.8 + Math.random() * 1.2;
+                }
+                
+                state.iaModels[index].value = parseFloat(newValue.toFixed(2));
+            });
+            
+            // Atualizar a exibição
+            document.querySelector('.ia-1 .ia-value').textContent = state.iaModels[0].value.toFixed(2) + 'x';
+            document.querySelector('.ia-2 .ia-value').textContent = state.iaModels[1].value.toFixed(2) + 'x';
+            document.querySelector('.ia-3 .ia-value').textContent = state.iaModels[2].value.toFixed(2) + 'x';
+            document.querySelector('.ia-4 .ia-value').textContent = state.iaModels[3].value.toFixed(2) + 'x';
+        }
+
         // Atualizar interface com novos dados
         function updateUI(result, prediction) {
             // Atualizar dados atuais
-            document.querySelector(".current-value").textContent = `${result.toFixed(2)}x`;
+            document.getElementById("current-value").textContent = `${result.toFixed(2)}x`;
             
             // Atualizar previsão
             if (prediction) {
                 document.getElementById("prediction-value").textContent = `${prediction.value.toFixed(2)}x`;
+                document.getElementById("next-prediction").textContent = `${prediction.value.toFixed(2)}x`;
                 document.getElementById("confidence-value").textContent = `${Math.round(prediction.confidence * 100)}%`;
-                document.querySelector(".prediction-value").textContent = `${prediction.value.toFixed(2)}x`;
-                document.querySelector(".volatility-value").textContent = `${Math.round(prediction.volatility * 100)}%`;
+                document.getElementById("volatility").textContent = `${Math.round(prediction.volatility * 100)}%`;
                 
                 // Atualizar barra de precisão
                 document.querySelector(".accuracy-bar").style.width = `${Math.round(prediction.confidence * 100)}%`;
                 document.querySelector(".accuracy-value").textContent = `${Math.round(prediction.confidence * 100)}%`;
             }
+        }
+
+        // Atualizar gráfico
+        function updateChart() {
+            // Atualizar dados
+            state.chart.updateSeries([{
+                name: 'Resultados',
+                data: state.results
+            }, {
+                name: 'Previsões',
+                data: [...Array(state.results.length - 1).fill(null), state.predictions[state.predictions.length - 1].value]
+            }]);
+            
+            // Atualizar eixo X
+            const newCategories = Array(10).fill().map((_, i) => 
+                moment().subtract(10 - i, 'minutes').format('HH:mm')
+            );
+            state.chart.updateOptions({
+                xaxis: {
+                    categories: newCategories
+                }
+            });
         }
 
         // Adicionar entrada de log
@@ -1105,9 +1418,15 @@
             document.getElementById('start').disabled = true;
             document.getElementById('stop').disabled = false;
             
+            // Atualizar tempo de atualização
+            document.getElementById('update-time').textContent = '15s';
+            
             // Simular dados
-            state.monitoringInterval = setInterval(simulateResult, 5000);
-            addLog("Monitoramento iniciado com exploração de vulnerabilidades", "exploit");
+            state.monitoringInterval = setInterval(simulateResult, state.updateInterval);
+            addLog("Monitoramento iniciado com múltiplas IAs", "exploit");
+            
+            // Iniciar sistema de correção
+            startCorrectionSystem();
         }
 
         // Parar monitoramento
@@ -1116,7 +1435,11 @@
             document.getElementById('start').disabled = false;
             document.getElementById('stop').disabled = true;
             clearInterval(state.monitoringInterval);
+            document.getElementById('update-time').textContent = 'Pausado';
             addLog("Monitoramento pausado");
+            
+            // Parar sistema de correção
+            clearInterval(state.correctionInterval);
         }
 
         // Otimizar exploit
@@ -1134,39 +1457,74 @@
             }
         }
 
+        // Sistema de correção automática
+        function startCorrectionSystem() {
+            state.correctionInterval = setInterval(() => {
+                if (state.correctionProgress < 100) {
+                    state.correctionProgress += 10;
+                    document.getElementById('correction-fill').style.width = state.correctionProgress + '%';
+                    document.getElementById('correction-status').textContent = `Progresso: ${state.correctionProgress}%`;
+                    
+                    if (state.correctionProgress % 30 === 0) {
+                        addLog("Sistema de correção: Recalibrando pesos das IAs", "data");
+                        document.getElementById('ai-status').textContent = "Recalibrando pesos com base no desempenho recente";
+                    }
+                    
+                    if (state.correctionProgress === 100) {
+                        addLog("Sistema de correção: Otimização completa!", "data");
+                        document.getElementById('ai-status').textContent = "Otimização concluída! Precisão aumentada em 5.2%";
+                        setTimeout(() => {
+                            state.correctionProgress = 0;
+                            document.getElementById('correction-fill').style.width = '0%';
+                            document.getElementById('correction-status').textContent = 'Progresso: 0%';
+                        }, 5000);
+                    }
+                }
+            }, 1000);
+        }
+
         // Inicialização
         document.addEventListener('DOMContentLoaded', () => {
+            // Configurar moment.js
+            moment.locale('pt-br');
+            
             // Iniciar gráfico
             initChart();
             
             // Preencher dados iniciais
             const prediction = analyzeData();
+            state.predictions.push(prediction);
             updateUI(state.results[state.results.length - 1], prediction);
+            updatePredictionHistory();
+            updateIAPredictions();
             
             // Iniciar automaticamente
             startMonitoring();
             
             // Adicionar logs iniciais
-            addLog("Sistema inicializado com exploração de vulnerabilidades ativa", "exploit");
+            addLog("Sistema inicializado com 4 IAs integradas", "exploit");
             addLog("Conectado ao servidor da Bet7K: https://7k.bet.br/games/spribe/aviator", "data");
-            addLog("Vulnerabilidade: Vazamento de resultados antecipados (86ms) sendo explorada", "exploit");
-            addLog("Padrão RNG detectado: Ciclo de 8 fases identificado", "exploit");
+            addLog("IA NeuralNet Pro carregada com 92% de precisão", "data");
+            addLog("IA DeepPredictor detectou padrão inicial", "data");
             
             // Configurar botões
             document.getElementById('start').addEventListener('click', startMonitoring);
             document.getElementById('stop').addEventListener('click', stopMonitoring);
             document.getElementById('exploit').addEventListener('click', optimizeExploit);
             document.getElementById('optimize').addEventListener('click', function() {
-                addLog("Otimizando algoritmo de previsão...", "data");
+                addLog("Otimizando todas as IAs com dados recentes...", "data");
+                document.getElementById('ai-status').textContent = "Otimizando modelos com aprendizado reforçado...";
+                
                 setTimeout(() => {
-                    addLog("Algoritmo otimizado - Precisão aumentada em 3.5%", "data");
+                    addLog("Otimização completa! Precisão geral aumentada", "data");
+                    document.getElementById('ai-status').textContent = "Otimização concluída! Precisão aumentada em 3.8%";
                 }, 2000);
             });
             
             document.getElementById('export').addEventListener('click', function() {
                 addLog("Exportando dados de análise...", "data");
                 setTimeout(() => {
-                    addLog("Dados exportados com sucesso (aviator_data.csv)", "data");
+                    addLog("Dados exportados com sucesso (aviator_multi_ia_data.csv)", "data");
                 }, 1500);
             });
         });
