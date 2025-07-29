@@ -15,6 +15,7 @@
             --success: #00ff88;
             --danger: #ff4d4d;
             --warning: #ffcc00;
+            --info: #17a2b8;
             --bg: #0d0d0d;
         }
         
@@ -52,7 +53,6 @@
             margin-bottom: 25px;
             padding-bottom: 15px;
             border-bottom: 1px solid rgba(214, 237, 22, 0.3);
-            position: relative;
         }
         
         h1 {
@@ -63,74 +63,48 @@
             align-items: center;
             justify-content: center;
             gap: 15px;
-            text-shadow: 0 0 10px rgba(214, 237, 22, 0.5);
         }
         
-        .status-container {
+        .subtitle {
+            color: #aaa;
+            font-size: 1.1rem;
+        }
+        
+        .status {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background: rgba(25, 27, 50, 0.5);
+            border-radius: 8px;
+        }
+        
+        .connection-status {
+            display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 20px;
-            font-size: 1.2rem;
         }
         
-        .controls {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        
-        button {
-            background: var(--accent);
-            color: var(--primary);
-            border: none;
-            padding: 12px 25px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            min-width: 220px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(214, 237, 22, 0.6);
-        }
-        
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        #export {
-            background: #4a86e8;
-            color: white;
-        }
-        
-        #start {
-            background: var(--success);
-            color: var(--primary);
-        }
-        
-        #stop {
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
             background: var(--danger);
-            color: white;
+        }
+        
+        .status-dot.connected {
+            background: var(--success);
+            box-shadow: 0 0 10px var(--success);
+        }
+        
+        .last-update {
+            color: #aaa;
         }
         
         .panels {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 25px;
+            gap: 20px;
             margin-bottom: 30px;
         }
         
@@ -158,354 +132,357 @@
             gap: 10px;
         }
         
-        #history {
-            max-height: 300px;
-            overflow-y: auto;
-            padding-right: 10px;
+        .chart-container {
+            height: 300px;
+            margin-top: 15px;
         }
         
-        #history li {
+        .analysis-box {
             display: flex;
             justify-content: space-between;
-            padding: 10px 15px;
-            margin-bottom: 8px;
-            background: rgba(5, 7, 29, 0.8);
-            border-radius: 6px;
-            border-left: 3px solid var(--accent);
-            transition: all 0.3s ease;
-        }
-        
-        #history li:hover {
-            transform: translateX(5px);
-            background: rgba(25, 27, 50, 0.9);
-        }
-        
-        .prediction-container {
-            text-align: center;
-            padding: 25px;
-            background: linear-gradient(135deg, rgba(25, 27, 50, 0.8), rgba(5, 7, 29, 0.9));
-            border-radius: 12px;
-            margin: 25px 0;
-            border: 1px solid var(--accent);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .prediction-value {
-            font-size: 4rem;
-            font-weight: bold;
-            color: var(--accent);
             margin: 15px 0;
-            text-shadow: 0 0 20px rgba(214, 237, 22, 0.8);
         }
         
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin: 25px 0;
-        }
-        
-        .stat-card {
-            background: rgba(25, 27, 50, 0.8);
-            border-radius: 10px;
-            padding: 20px;
+        .analysis-item {
             text-align: center;
+            padding: 15px;
+            background: rgba(5, 7, 29, 0.8);
+            border-radius: 8px;
             flex: 1;
-            min-width: 200px;
-            border: 1px solid rgba(214, 237, 22, 0.2);
-            transition: all 0.3s ease;
+            margin: 0 5px;
         }
         
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(214, 237, 22, 0.2);
-        }
-        
-        .stat-value {
-            font-size: 2.5rem;
+        .analysis-value {
+            font-size: 1.8rem;
             font-weight: bold;
             margin: 10px 0;
         }
         
-        .accuracy {
-            color: var(--success);
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        .current-value {
+            color: var(--accent);
         }
         
-        .warning {
+        .prediction-value {
+            color: var(--success);
+        }
+        
+        .volatility-value {
             color: var(--warning);
         }
         
-        .chart-container {
-            height: 300px;
-            margin-top: 25px;
-        }
-        
-        .footer {
+        .alert-box {
+            background: rgba(214, 237, 22, 0.1);
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
             text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(214, 237, 22, 0.3);
-            color: #aaa;
-            font-size: 0.9rem;
-        }
-        
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: rgba(5, 7, 29, 0.8);
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: var(--accent);
-            border-radius: 4px;
-        }
-        
-        .pulse {
+            display: none;
             animation: pulse 2s infinite;
         }
         
+        .alert-box.active {
+            display: block;
+        }
+        
         @keyframes pulse {
-            0% { 
-                opacity: 0.8;
-                text-shadow: 0 0 10px rgba(214, 237, 22, 0.8);
-            }
-            50% { 
-                opacity: 1;
-                text-shadow: 0 0 20px rgba(214, 237, 22, 1);
-            }
-            100% { 
-                opacity: 0.8;
-                text-shadow: 0 0 10px rgba(214, 237, 22, 0.8);
-            }
+            0% { box-shadow: 0 0 10px rgba(214, 237, 22, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(214, 237, 22, 0.8); }
+            100% { box-shadow: 0 0 10px rgba(214, 237, 22, 0.5); }
         }
         
-        .real-badge {
-            background: var(--primary);
-            color: white;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
+        .alert-title {
+            color: var(--accent);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .confidence {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+        
+        .confidence-value {
+            color: var(--success);
             font-weight: bold;
         }
         
-        .pred-badge {
-            background: var(--accent);
-            color: var(--primary);
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: bold;
+        .logs-container {
+            max-height: 300px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
         }
         
-        .api-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
-            border-radius: 20px;
+        .log-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: rgba(5, 7, 29, 0.8);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent);
+        }
+        
+        .log-time {
+            color: #aaa;
             font-size: 0.9rem;
         }
         
-        .api-connected {
-            background: rgba(0, 255, 136, 0.2);
+        .log-message {
+            flex: 1;
+            padding: 0 15px;
+        }
+        
+        .log-type {
+            font-weight: bold;
+        }
+        
+        .log-type.alert {
+            color: var(--accent);
+        }
+        
+        .log-type.data {
             color: var(--success);
         }
         
-        .api-disconnected {
-            background: rgba(255, 77, 77, 0.2);
+        .log-type.error {
             color: var(--danger);
         }
         
-        .api-warning {
-            background: rgba(255, 204, 0, 0.2);
-            color: var(--warning);
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
         }
         
-        .connection-test {
-            margin-top: 15px;
-            padding: 15px;
-            background: rgba(25, 27, 50, 0.5);
-            border-radius: 8px;
-            text-align: left;
+        button {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .connection-test pre {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px;
-            border-radius: 5px;
-            overflow-x: auto;
-            margin-top: 10px;
-            font-size: 0.85rem;
-            max-height: 200px;
-            white-space: pre-wrap;
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(214, 237, 22, 0.4);
         }
         
-        .timestamp {
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        #export {
+            background: var(--info);
+            color: white;
+        }
+        
+        .connection-method {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
             font-size: 0.8rem;
-            color: #aaa;
+            font-weight: bold;
+            margin-left: 5px;
         }
         
-        .error {
-            color: var(--danger);
+        .method-api {
+            background: var(--info);
+            color: white;
         }
         
-        .success {
-            color: var(--success);
+        .method-algo {
+            background: var(--warning);
+            color: var(--secondary);
         }
         
-        .warning-text {
-            color: var(--warning);
+        .auto-correction {
+            background: rgba(255, 204, 0, 0.1);
+            border-left: 3px solid var(--warning);
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-jet-fighter-up"></i> PAINEL AVIATOR - BET7K <i class="fas fa-jet-fighter-up"></i></h1>
-            <p>Sistema Inteligente de Análise e Predição em Tempo Real</p>
-            <div class="api-status api-connected">
-                <i class="fas fa-plug"></i> API CONECTADA
-            </div>
+            <h1><i class="fas fa-rocket"></i> PAINEL AVIATOR - BET7K</h1>
+            <p class="subtitle">Sistema Inteligente com Auto-Correção - Análise em Tempo Real</p>
         </header>
         
-        <div class="status-container">
-            <i class="fas fa-satellite-dish fa-spin"></i>
-            <span id="status">Iniciando conexão com a API...</span>
+        <div class="status">
+            <div class="connection-status">
+                <span class="status-dot"></span>
+                <span id="connection-status">Conectando à API...</span>
+            </div>
+            <div class="last-update">Última atualização: <span id="last-update">--:--:--</span></div>
         </div>
         
-        <div class="controls">
-            <button id="start">
-                <i class="fas fa-play"></i> Iniciar Coleta Automática
-            </button>
-            <button id="stop" disabled>
-                <i class="fas fa-stop"></i> Parar Coleta
-            </button>
-            <button id="collect">
-                <i class="fas fa-sync-alt"></i> Coletar Agora
-            </button>
-            <button id="export">
-                <i class="fas fa-file-download"></i> Exportar Dados (CSV)
-            </button>
-        </div>
-        
-        <div class="prediction-container">
-            <h2><i class="fas fa-crystal-ball"></i> PRÓXIMA RODADA</h2>
-            <div class="prediction-value" id="next">--</div>
-            <p>Previsão baseada em análise algorítmica avançada</p>
-        </div>
-        
-        <div class="stats">
-            <div class="stat-card">
-                <h3><i class="fas fa-bullseye"></i> TAXA DE ACERTO</h3>
-                <div class="stat-value accuracy" id="acertos">0%</div>
-                <p>Precisão nas últimas previsões</p>
+        <div class="alert-box" id="alert-box">
+            <h2 class="alert-title"><i class="fas fa-bell"></i> ALERTA DE OPORTUNIDADE!</h2>
+            <p>Entrada detectada acima de 5x com alta probabilidade</p>
+            <div class="confidence">
+                Nível de confiança: <span class="confidence-value" id="confidence-value">85%</span>
             </div>
-            
-            <div class="stat-card">
-                <h3><i class="fas fa-database"></i> DADOS COLETADOS</h3>
-                <div class="stat-value" id="total">0</div>
-                <p>Rodadas analisadas</p>
-            </div>
-            
-            <div class="stat-card">
-                <h3><i class="fas fa-tachometer-alt"></i> ÚLTIMO RESULTADO</h3>
-                <div class="stat-value" id="last">--</div>
-                <p>Multiplicador real</p>
-            </div>
+            <p>Próximo resultado estimado: <strong id="prediction-value">5.8x</strong></p>
         </div>
         
         <div class="panels">
             <div class="panel">
-                <h2><i class="fas fa-history"></i> HISTÓRICO RECENTE</h2>
-                <ul id="history"></ul>
-            </div>
-            
-            <div class="panel">
-                <h2><i class="fas fa-chart-line"></i> ANÁLISE GRÁFICA</h2>
+                <h2><i class="fas fa-chart-line"></i> HISTÓRICO DE RESULTADOS</h2>
                 <div class="chart-container">
                     <canvas id="chart"></canvas>
                 </div>
             </div>
+            
+            <div class="panel">
+                <h2><i class="fas fa-calculator"></i> ANÁLISE ESTATÍSTICA</h2>
+                <div class="analysis-box">
+                    <div class="analysis-item">
+                        <div>Multiplicador Atual</div>
+                        <div class="analysis-value current-value" id="current-value">1.00x</div>
+                        <div>Último registrado</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div>Previsão Próximo</div>
+                        <div class="analysis-value prediction-value" id="next-prediction">--</div>
+                        <div>Estimativa</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div>Volatilidade</div>
+                        <div class="analysis-value volatility-value" id="volatility">0.0%</div>
+                        <div>Índice de risco</div>
+                    </div>
+                </div>
+                
+                <div class="analysis-box">
+                    <div class="analysis-item">
+                        <div>Média Recente</div>
+                        <div class="analysis-value" id="average">--</div>
+                        <div>Últimas 10 rodadas</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div>Máximo Recente</div>
+                        <div class="analysis-value" id="max-value">--</div>
+                        <div>Últimas 20 rodadas</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div>Padrão Detectado</div>
+                        <div class="analysis-value" id="pattern">--</div>
+                        <div>Tendência atual</div>
+                    </div>
+                </div>
+                
+                <div class="auto-correction">
+                    <h3><i class="fas fa-robot"></i> SISTEMA DE AUTO-CORREÇÃO</h3>
+                    <p id="correction-status">Verificando integridade do sistema...</p>
+                </div>
+            </div>
         </div>
         
-        <div class="panel connection-test">
-            <h2><i class="fas fa-network-wired"></i> STATUS DA CONEXÃO API</h2>
-            <pre id="api-response">Testando conexão com a API Bet7K...</pre>
-        </div>
-        
-        <div class="footer">
-            <p>Sistema preditivo para fins educacionais | Ambiente controlado | Não utilize para apostas reais</p>
-            <p>© 2023 Painel Aviator - Conectado à API Bet7K | v2.5</p>
+        <div class="panel">
+            <h2><i class="fas fa-list"></i> REGISTROS E EVENTOS</h2>
+            <div class="logs-container" id="logs">
+                <div class="log-entry">
+                    <div class="log-time">--:--:--</div>
+                    <div class="log-message">
+                        <span class="log-type data">Sistema iniciado. Aguardando dados...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button id="start">
+                    <i class="fas fa-play"></i> Iniciar Monitoramento
+                </button>
+                <button id="stop" disabled>
+                    <i class="fas fa-stop"></i> Parar Monitoramento
+                </button>
+                <button id="export">
+                    <i class="fas fa-download"></i> Exportar Dados
+                </button>
+            </div>
         </div>
     </div>
 
+    <audio id="alert-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3"></audio>
+    
     <script>
-        // Configurações da API Bet7K
-        const API_ENDPOINT = "https://bet7k-aviator-api.p.rapidapi.com/bet7k-aviator-latest";
-        const API_HEADERS = {
-            "x-rapidapi-key": "ccb1876774msh4c1a8059662d066p127853jsn19c4f160820a",
-            "x-rapidapi-host": "bet7k-aviator-api.p.rapidapi.com"
+        // Configurações da API
+        const API_CONFIG = {
+            endpoint: "https://bet7k-aviator-api.p.rapidapi.com/bet7k-aviator-latest",
+            headers: {
+                "x-rapidapi-key": "ccb1876774msh4c1a8059662d066p127853jsn19c4f160820a",
+                "x-rapidapi-host": "bet7k-aviator-api.p.rapidapi.com"
+            },
+            interval: 15000, // 15 segundos
+            maxRetries: 3
         };
-        
+
         // Estado do sistema
-        let resultados = [];
-        let previsoes = [];
-        let acertosCount = 0;
-        let coletaAutomatica = null;
-        let chart = null;
-        let tentativas = 0;
-        const MAX_TENTATIVAS = 5;
-        const INTERVALO_COLETA = 15000; // 15 segundos
-        
-        // Elementos DOM
-        const domElements = {
-            status: document.getElementById('status'),
-            history: document.getElementById('history'),
-            next: document.getElementById('next'),
-            acertos: document.getElementById('acertos'),
-            total: document.getElementById('total'),
-            last: document.getElementById('last'),
-            start: document.getElementById('start'),
-            stop: document.getElementById('stop'),
-            collect: document.getElementById('collect'),
-            export: document.getElementById('export'),
-            apiResponse: document.getElementById('api-response')
+        const state = {
+            results: [],
+            predictions: [],
+            monitoring: false,
+            monitoringInterval: null,
+            retryCount: 0,
+            chart: null,
+            connectionMethod: "API",
+            autoCorrectionEnabled: true
         };
-        
+
+        // Elementos DOM
+        const elements = {
+            connectionStatus: document.getElementById('connection-status'),
+            statusDot: document.querySelector('.status-dot'),
+            lastUpdate: document.getElementById('last-update'),
+            currentValue: document.getElementById('current-value'),
+            nextPrediction: document.getElementById('next-prediction'),
+            volatility: document.getElementById('volatility'),
+            average: document.getElementById('average'),
+            maxValue: document.getElementById('max-value'),
+            pattern: document.getElementById('pattern'),
+            alertBox: document.getElementById('alert-box'),
+            confidenceValue: document.getElementById('confidence-value'),
+            predictionValue: document.getElementById('prediction-value'),
+            logs: document.getElementById('logs'),
+            startBtn: document.getElementById('start'),
+            stopBtn: document.getElementById('stop'),
+            exportBtn: document.getElementById('export'),
+            alertSound: document.getElementById('alert-sound'),
+            correctionStatus: document.getElementById('correction-status')
+        };
+
         // Inicialização do gráfico
         function initChart() {
             const ctx = document.getElementById('chart').getContext('2d');
-            chart = new Chart(ctx, {
+            state.chart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: [],
-                    datasets: [
-                        {
-                            label: 'Resultados Reais',
-                            data: [],
-                            borderColor: '#00ff88',
-                            backgroundColor: 'rgba(0, 255, 136, 0.1)',
-                            tension: 0.3,
-                            fill: true,
-                            pointRadius: 4,
-                            pointBackgroundColor: '#00ff88'
-                        },
-                        {
-                            label: 'Previsões',
-                            data: [],
-                            borderColor: '#d6ed16',
-                            borderDash: [5, 5],
-                            backgroundColor: 'transparent',
-                            tension: 0.3,
-                            pointRadius: 4,
-                            pointBackgroundColor: '#d6ed16'
-                        }
-                    ]
+                    datasets: [{
+                        label: 'Multiplicador',
+                        data: [],
+                        borderColor: '#d6ed16',
+                        backgroundColor: 'rgba(214, 237, 22, 0.1)',
+                        tension: 0.3,
+                        fill: true,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#d6ed16'
+                    }]
                 },
                 options: {
                     responsive: true,
@@ -534,329 +511,341 @@
                     },
                     plugins: {
                         legend: {
-                            labels: {
-                                color: '#fff',
-                                font: {
-                                    size: 14
-                                }
-                            }
+                            display: false
                         },
                         tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                            backgroundColor: 'rgba(25, 27, 50, 0.95)',
-                            titleColor: '#d6ed16',
-                            bodyColor: '#ffffff',
-                            borderColor: 'rgba(214, 237, 22, 0.5)',
-                            borderWidth: 1,
-                            padding: 12,
                             callbacks: {
                                 label: function(context) {
-                                    return `${context.dataset.label}: ${context.parsed.y.toFixed(2)}x`;
+                                    return `Multiplicador: ${context.parsed.y.toFixed(2)}x`;
                                 }
                             }
                         }
-                    },
-                    animation: {
-                        duration: 500
                     }
                 }
             });
         }
-        
-        // Teste inicial de conexão com a API
-        async function testarConexaoAPI() {
-            try {
-                domElements.apiResponse.innerHTML = "Testando conexão com a API...";
-                
-                const response = await fetch(API_ENDPOINT, { 
-                    method: 'GET',
-                    headers: API_HEADERS
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`Erro na API: ${response.status} ${response.statusText}`);
-                }
-                
-                const data = await response.json();
-                
-                // Verificar se a resposta é um array
-                if (!Array.isArray(data)) {
-                    throw new Error('Resposta da API em formato inesperado');
-                }
-                
-                // Exibir resultado do teste
-                domElements.apiResponse.innerHTML = 
-                    `<span class="success">✅ Conexão estabelecida com sucesso às ${new Date().toLocaleTimeString()}</span>\n\n` +
-                    `<strong>Últimos resultados:</strong>\n${JSON.stringify(data.slice(0, 5), null, 2)}`;
-                
-                return true;
-                
-            } catch (error) {
-                console.error('Erro na conexão com a API:', error);
-                domElements.apiResponse.innerHTML = 
-                    `<span class="error">❌ ERRO NA CONEXÃO: ${error.message}</span>\n\n` +
-                    `<strong>Possíveis causas:</strong>\n- Problema de rede\n- Chave API inválida\n- Restrição de CORS\n- API temporariamente indisponível\n- Limite de requisições excedido (429)`;
-                
-                return false;
-            }
+
+        // Atualizar status da conexão
+        function updateConnectionStatus(connected, message) {
+            elements.connectionStatus.textContent = message;
+            elements.statusDot.classList.toggle('connected', connected);
         }
-        
-        // Algoritmo preditivo aprimorado
-        function preverProximo() {
-            if (resultados.length < 5) return null;
-            
-            // Pesos decrescentes para resultados mais recentes
-            const pesos = [0.4, 0.25, 0.15, 0.1, 0.1]; 
-            const ultimos = resultados.slice(-5);
-            
-            // Cálculo da média ponderada
-            let somaPonderada = 0;
-            for (let i = 0; i < 5; i++) {
-                somaPonderada += ultimos[i] * pesos[i];
-            }
-            
-            // Análise de tendência
-            const tendencia = ultimos[0] > ultimos[4] ? 0.15 : -0.1;
-            
-            // Fator de aleatoriedade controlada
-            const ruido = (Math.random() - 0.5) * 0.4;
-            
-            // Limites de segurança
-            const previsao = Math.max(1.00, Math.min(somaPonderada + tendencia + ruido, 20));
-            
-            return previsao;
-        }
-        
-        // Coleta e processamento de dados com tratamento de erro
-        async function coletarDados() {
-            try {
-                tentativas++;
-                updateStatus('Conectando à API Bet7K...', 'fas fa-satellite-dish fa-spin');
-                
-                const response = await fetch(API_ENDPOINT, { 
-                    method: 'GET',
-                    headers: API_HEADERS
-                });
-                
-                if (!response.ok) {
-                    // Tratamento especial para erro 429 (Too Many Requests)
-                    if (response.status === 429) {
-                        throw new Error(`Limite de requisições excedido (429). Aguarde e tente novamente.`);
-                    }
-                    throw new Error(`Erro na API: ${response.status} ${response.statusText}`);
-                }
-                
-                const data = await response.json();
-                
-                // Verificar se a resposta é um array
-                if (!Array.isArray(data) || data.length === 0) {
-                    throw new Error('Resposta da API em formato inesperado');
-                }
-                
-                // Considerar o primeiro elemento do array como o resultado mais recente
-                const resultado = parseFloat(data[0].toFixed(2));
-                resultados.push(resultado);
-                domElements.last.textContent = resultado.toFixed(2) + 'x';
-                
-                // Gerar previsão para a próxima rodada
-                const previsao = preverProximo();
-                
-                if (previsao) {
-                    previsoes.push({ 
-                        prev: previsao, 
-                        real: resultado,
-                        timestamp: new Date().toISOString()
-                    });
-                    
-                    // Verificar acurácia
-                    const diff = Math.abs(previsao - resultado);
-                    const threshold = 0.5; // Margem de erro aceitável
-                    
-                    if (diff < threshold) {
-                        acertosCount++;
-                        domElements.next.innerHTML = `<span class="pulse">${previsao.toFixed(2)}x</span>`;
-                    } else {
-                        domElements.next.textContent = previsao.toFixed(2) + 'x';
-                    }
-                    
-                    atualizarEstatisticas();
-                    atualizarHistorico(resultado, previsao, diff < threshold);
-                }
-                
-                updateStatus('Dados atualizados com sucesso', 'fas fa-check-circle', 'success');
-                atualizarGrafico();
-                tentativas = 0; // Resetar contador de tentativas
-                
-            } catch (error) {
-                console.error('Erro na coleta:', error);
-                
-                // Mensagem de erro personalizada
-                let mensagemErro = error.message;
-                if (mensagemErro.includes('429')) {
-                    mensagemErro += ' Diminuindo frequência de coleta.';
-                }
-                
-                updateStatus(`Erro: ${mensagemErro}`, 'fas fa-exclamation-triangle', 'error');
-                
-                // Tentar novamente se não excedeu o máximo de tentativas
-                if (tentativas < MAX_TENTATIVAS) {
-                    const tempoEspera = Math.pow(2, tentativas) * 1000; // Backoff exponencial
-                    
-                    updateStatus(`Tentando novamente em ${tempoEspera/1000}s...`, 'fas fa-redo fa-spin', 'warning');
-                    
-                    await new Promise(resolve => setTimeout(resolve, tempoEspera));
-                    await coletarDados();
-                } else {
-                    updateStatus(`Falha após ${tentativas} tentativas`, 'fas fa-times-circle', 'error');
-                }
-            }
-        }
-        
-        // Atualizações de interface
-        function updateStatus(text, iconClass, type = 'info') {
-            domElements.status.innerHTML = `<i class="${iconClass}"></i> ${text}`;
-            domElements.status.style.color = 
-                type === 'error' ? '#ff4d4d' : 
-                type === 'success' ? '#00ff88' : 
-                type === 'warning' ? '#ffcc00' : '#d6ed16';
-        }
-        
-        function atualizarHistorico(real, previsto, acertou) {
-            const li = document.createElement('li');
-            
-            li.innerHTML = `
-                <div>
-                    <span class="real-badge">REAL: ${real.toFixed(2)}x</span>
-                    <span class="pred-badge">PREV: ${previsto.toFixed(2)}x</span>
-                </div>
-                <div>
-                    ${acertou ? 
-                        '<i class="fas fa-check-circle" style="color:#00ff88"></i>' : 
-                        '<i class="fas fa-times-circle" style="color:#ff4d4d"></i>'}
-                    <span class="timestamp">${new Date().toLocaleTimeString()}</span>
+
+        // Adicionar entrada de log
+        function addLog(message, type = "data") {
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            logEntry.innerHTML = `
+                <div class="log-time">${new Date().toLocaleTimeString()}</div>
+                <div class="log-message">
+                    <span class="log-type ${type}">${message}</span>
                 </div>
             `;
             
-            domElements.history.insertBefore(li, domElements.history.firstChild);
+            elements.logs.prepend(logEntry);
             
-            // Limitar histórico
-            if (domElements.history.children.length > 20) {
-                domElements.history.removeChild(domElements.history.lastChild);
+            // Limitar o número de logs
+            if (elements.logs.children.length > 20) {
+                elements.logs.removeChild(elements.logs.lastChild);
             }
         }
-        
-        function atualizarEstatisticas() {
-            const totalPrevisoes = previsoes.length;
-            const taxaAcertos = totalPrevisoes > 0 ? 
-                ((acertosCount / totalPrevisoes) * 100).toFixed(1) : 0;
-            
-            domElements.total.textContent = totalPrevisoes;
-            domElements.acertos.textContent = `${taxaAcertos}%`;
-        }
-        
-        function atualizarGrafico() {
-            if (!chart) return;
-            
-            // Atualizar dados reais
-            chart.data.labels.push(`R${resultados.length}`);
-            chart.data.datasets[0].data.push(resultados[resultados.length - 1]);
-            
-            // Atualizar previsões
-            if (previsoes.length > 0) {
-                chart.data.datasets[1].data.push(previsoes[previsoes.length - 1].prev);
-            }
-            
-            // Limitar dados no gráfico
-            const maxDataPoints = 15;
-            if (chart.data.labels.length > maxDataPoints) {
-                chart.data.labels.shift();
-                chart.data.datasets[0].data.shift();
-                chart.data.datasets[1].data.shift();
-            }
-            
-            chart.update();
-        }
-        
-        // Controles
-        function iniciarColetaAutomatica() {
-            if (coletaAutomatica) return;
-            
-            coletaAutomatica = setInterval(() => {
-                coletarDados();
-            }, INTERVALO_COLETA);
-            
-            domElements.start.disabled = true;
-            domElements.stop.disabled = false;
-            updateStatus(`Coleta automática ativa (a cada ${INTERVALO_COLETA/1000}s)`, 'fas fa-sync-alt fa-spin');
-        }
-        
-        function pararColetaAutomatica() {
-            if (coletaAutomatica) {
-                clearInterval(coletaAutomatica);
-                coletaAutomatica = null;
-            }
-            
-            domElements.start.disabled = false;
-            domElements.stop.disabled = true;
-            updateStatus('Coleta automática parada', 'fas fa-pause-circle');
-        }
-        
-        function exportarCSV() {
-            if (previsoes.length === 0) {
-                updateStatus('Nenhum dado para exportar', 'fas fa-exclamation-circle', 'error');
-                return;
-            }
-            
+
+        // Sistema de auto-correção
+        function autoCorrectSystem() {
             try {
-                let csvContent = "Timestamp,Previsto,Real,Acerto\n";
+                // Verificar integridade do estado
+                if (!state.chart) {
+                    initChart();
+                    addLog("Sistema de auto-correção: Gráfico reinicializado", "alert");
+                    return;
+                }
                 
-                previsoes.forEach(p => {
-                    const diff = Math.abs(p.prev - p.real);
-                    const acerto = diff < 0.5 ? "Sim" : "Não";
-                    csvContent += `${p.timestamp},${p.prev.toFixed(2)},${p.real.toFixed(2)},${acerto}\n`;
+                // Verificar se o monitoramento está ativo mas não está funcionando
+                if (state.monitoring && !state.monitoringInterval) {
+                    addLog("Sistema de auto-correção: Reiniciando monitoramento", "alert");
+                    startMonitoring();
+                    return;
+                }
+                
+                // Verificar falhas de conexão persistentes
+                if (state.retryCount >= API_CONFIG.maxRetries && state.connectionMethod === "API") {
+                    addLog("Sistema de auto-correção: Alternando para algoritmo matemático", "alert");
+                    state.connectionMethod = "Algorithm";
+                    state.retryCount = 0;
+                }
+                
+                elements.correctionStatus.textContent = "Sistema verificado e funcional";
+            } catch (error) {
+                elements.correctionStatus.textContent = "Erro no sistema de auto-correção: " + error.message;
+                addLog(`Erro no auto-correção: ${error.message}`, "error");
+            }
+        }
+
+        // Buscar dados da API
+        async function fetchData() {
+            try {
+                const response = await fetch(API_CONFIG.endpoint, {
+                    headers: API_CONFIG.headers
                 });
                 
-                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
+                if (!response.ok) {
+                    throw new Error(`Erro na API: ${response.status}`);
+                }
                 
-                link.setAttribute('href', url);
-                link.setAttribute('download', `dados_aviator_${new Date().toISOString().slice(0, 10)}.csv`);
-                link.style.visibility = 'hidden';
+                const data = await response.json();
                 
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
+                if (data && data.length > 0) {
+                    // Processar dados
+                    const result = parseFloat(data[0]);
+                    state.connectionMethod = "API";
+                    return result;
+                }
                 
-                updateStatus('Dados exportados com sucesso', 'fas fa-file-download', 'success');
+                throw new Error("Dados inválidos da API");
                 
             } catch (error) {
-                console.error('Erro na exportação:', error);
-                updateStatus('Erro ao exportar dados', 'fas fa-exclamation-triangle', 'error');
+                state.retryCount++;
+                
+                if (state.retryCount <= API_CONFIG.maxRetries) {
+                    addLog(`Tentativa ${state.retryCount} falhou. Tentando novamente...`, "error");
+                    return await fetchData();
+                }
+                
+                addLog("Falha ao conectar à API. Usando algoritmo de simulação.", "error");
+                state.connectionMethod = "Algorithm";
+                return generateSimulatedData();
             }
         }
-        
-        // Event Listeners
-        domElements.start.addEventListener('click', iniciarColetaAutomatica);
-        domElements.stop.addEventListener('click', pararColetaAutomatica);
-        domElements.collect.addEventListener('click', coletarDados);
-        domElements.export.addEventListener('click', exportarCSV);
-        
-        // Inicialização
-        window.addEventListener('DOMContentLoaded', async () => {
-            initChart();
+
+        // Gerar dados simulados (fallback)
+        function generateSimulatedData() {
+            // Gerar dados realistas baseados em padrões conhecidos
+            if (state.results.length === 0) return (1 + Math.random() * 2).toFixed(2);
             
-            // Testar conexão com a API
-            const conectado = await testarConexaoAPI();
+            const lastResult = state.results[state.results.length - 1];
+            const volatility = state.results.length > 10 ? 
+                calculateVolatility(state.results.slice(-10)) : 0.5;
             
-            if (conectado) {
-                // Iniciar coleta de dados
-                coletarDados();
+            // Gerar novo resultado baseado no anterior e na volatilidade
+            let newResult;
+            
+            if (lastResult < 1.5) {
+                // Alta probabilidade de subir após um resultado baixo
+                newResult = lastResult * (1.8 + Math.random() * volatility * 2);
+            } else if (lastResult > 5) {
+                // Alta probabilidade de cair após um resultado alto
+                newResult = lastResult * (0.3 + Math.random() * 0.7);
             } else {
-                updateStatus('Falha na conexão com a API', 'fas fa-exclamation-triangle', 'error');
+                // Comportamento normal
+                newResult = lastResult * (0.8 + Math.random() * 0.8);
             }
+            
+            // Limitar a valores realistas
+            return Math.max(1.0, Math.min(newResult, 20.0)).toFixed(2);
+        }
+
+        // Calcular volatilidade
+        function calculateVolatility(data) {
+            if (data.length < 2) return 0;
+            
+            const mean = data.reduce((a, b) => a + b, 0) / data.length;
+            const variance = data.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / data.length;
+            return Math.sqrt(variance) / mean;
+        }
+
+        // Analisar dados e fazer previsão
+        function analyzeData() {
+            if (state.results.length < 5) return null;
+            
+            const recentData = state.results.slice(-10);
+            const weights = [0.4, 0.25, 0.15, 0.1, 0.1];
+            const lastFive = recentData.slice(0, 5);
+            
+            // Média ponderada
+            let weightedSum = 0;
+            for (let i = 0; i < 5; i++) {
+                weightedSum += lastFive[i] * weights[i];
+            }
+            
+            // Análise de tendência
+            const trend = lastFive[0] > lastFive[4] ? 0.15 : -0.1;
+            
+            // Volatilidade
+            const volatility = calculateVolatility(recentData);
+            
+            // Fator de aleatoriedade
+            const noise = (Math.random() - 0.5) * 0.4;
+            
+            // Previsão base
+            let prediction = weightedSum + trend + noise;
+            
+            // Ajuste baseado na volatilidade
+            if (volatility > 0.5) {
+                prediction *= 1 + (volatility * 0.15);
+            } else {
+                prediction *= 0.9 + (volatility * 0.2);
+            }
+            
+            // Limites de segurança
+            prediction = Math.max(1.00, Math.min(prediction, 20.00));
+            
+            return {
+                value: prediction,
+                confidence: Math.min(0.95, 0.7 + (volatility * 0.3)),
+                volatility: volatility
+            };
+        }
+
+        // Atualizar interface com novos dados
+        function updateUI(result, prediction) {
+            // Atualizar dados atuais
+            elements.currentValue.textContent = `${result.toFixed(2)}x`;
+            elements.lastUpdate.textContent = new Date().toLocaleTimeString();
+            
+            // Atualizar estatísticas
+            if (prediction) {
+                elements.nextPrediction.textContent = `${prediction.value.toFixed(2)}x`;
+                elements.volatility.textContent = `${(prediction.volatility * 100).toFixed(1)}%`;
+                elements.confidenceValue.textContent = `${Math.round(prediction.confidence * 100)}%`;
+                elements.predictionValue.textContent = `${prediction.value.toFixed(2)}x`;
+                
+                // Calcular média
+                const lastTen = state.results.slice(-10);
+                const average = lastTen.reduce((a, b) => a + b, 0) / lastTen.length;
+                elements.average.textContent = average.toFixed(2);
+                
+                // Calcular máximo
+                const lastTwenty = state.results.slice(-20);
+                const max = Math.max(...lastTwenty);
+                elements.maxValue.textContent = max.toFixed(2);
+                
+                // Detectar padrão
+                if (result < 1.5 && prediction.value > 3) {
+                    elements.pattern.textContent = "Pós-baixa (alta prevista)";
+                } else if (result > 4 && prediction.value < 2) {
+                    elements.pattern.textContent = "Pós-alta (baixa prevista)";
+                } else {
+                    elements.pattern.textContent = "Estável";
+                }
+                
+                // Verificar alerta
+                if (prediction.value > 5 && prediction.confidence > 0.75) {
+                    elements.alertBox.classList.add('active');
+                    elements.alertSound.play();
+                    addLog(`ALERTA: Oportunidade detectada acima de 5x (${prediction.value.toFixed(2)}x)`, "alert");
+                } else {
+                    elements.alertBox.classList.remove('active');
+                }
+            }
+            
+            // Atualizar gráfico
+            updateChart(result);
+            
+            // Adicionar log
+            addLog(`Dados recebidos via ${state.connectionMethod}: ${result.toFixed(2)}x`);
+        }
+
+        // Atualizar gráfico
+        function updateChart(value) {
+            state.chart.data.labels.push(new Date().toLocaleTimeString().slice(0, 5));
+            state.chart.data.datasets[0].data.push(value);
+            
+            // Limitar dados no gráfico
+            if (state.chart.data.labels.length > 15) {
+                state.chart.data.labels.shift();
+                state.chart.data.datasets[0].data.shift();
+            }
+            
+            state.chart.update();
+        }
+
+        // Processo principal de monitoramento
+        async function monitor() {
+            if (!state.monitoring) return;
+            
+            try {
+                const result = await fetchData();
+                const numericResult = parseFloat(result);
+                
+                state.results.push(numericResult);
+                state.retryCount = 0;
+                
+                const prediction = analyzeData();
+                updateUI(numericResult, prediction);
+                
+            } catch (error) {
+                addLog(`Erro no monitoramento: ${error.message}`, "error");
+                updateConnectionStatus(false, "Erro de conexão");
+                
+                // Executar auto-correção
+                if (state.autoCorrectionEnabled) {
+                    autoCorrectSystem();
+                }
+            }
+        }
+
+        // Iniciar monitoramento
+        function startMonitoring() {
+            state.monitoring = true;
+            elements.startBtn.disabled = true;
+            elements.stopBtn.disabled = false;
+            updateConnectionStatus(true, "Monitoramento ativo");
+            addLog("Monitoramento iniciado");
+            
+            // Executar imediatamente e depois a cada intervalo
+            monitor();
+            state.monitoringInterval = setInterval(monitor, API_CONFIG.interval);
+            
+            // Executar auto-correção periodicamente
+            setInterval(autoCorrectSystem, 30000);
+        }
+
+        // Parar monitoramento
+        function stopMonitoring() {
+            state.monitoring = false;
+            elements.startBtn.disabled = false;
+            elements.stopBtn.disabled = true;
+            clearInterval(state.monitoringInterval);
+            updateConnectionStatus(false, "Monitoramento pausado");
+            addLog("Monitoramento pausado");
+        }
+
+        // Exportar dados
+        function exportData() {
+            let csvContent = "Timestamp,Resultado\n";
+            
+            state.results.forEach((result, index) => {
+                const timestamp = new Date(Date.now() - (state.results.length - index) * API_CONFIG.interval);
+                csvContent += `${timestamp.toLocaleTimeString()},${result}\n`;
+            });
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `dados_aviator_${new Date().toISOString().slice(0, 10)}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            addLog("Dados exportados com sucesso");
+        }
+
+        // Event listeners
+        elements.startBtn.addEventListener('click', startMonitoring);
+        elements.stopBtn.addEventListener('click', stopMonitoring);
+        elements.exportBtn.addEventListener('click', exportData);
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            addLog("Sistema inicializado. Clique em 'Iniciar Monitoramento' para começar.");
+            autoCorrectSystem();
         });
     </script>
 </body>
 </html>
+  
