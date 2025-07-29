@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Aviator Premium - Bet7K</title>
+    <title>Painel Aviator Inteligente - Bet7K</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
         :root {
             --primary: #191B32;
@@ -16,7 +15,6 @@
             --success: #00ff88;
             --danger: #ff4d4d;
             --warning: #ffcc00;
-            --info: #17a2b8;
             --bg: #0d0d0d;
         }
         
@@ -49,323 +47,816 @@
             overflow: hidden;
         }
         
-        /* [Restante do CSS permanece igual à versão anterior] */
-        
-        .connection-method {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-left: 5px;
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(214, 237, 22, 0.3);
+            position: relative;
         }
         
-        .method-api {
-            background: var(--info);
+        h1 {
+            color: var(--accent);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            text-shadow: 0 0 10px rgba(214, 237, 22, 0.5);
+        }
+        
+        .status-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        button {
+            background: var(--accent);
+            color: var(--primary);
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 220px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(214, 237, 22, 0.6);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        #export {
+            background: #4a86e8;
             color: white;
         }
         
-        .method-ws {
-            background: var(--warning);
-            color: var(--secondary);
+        #start {
+            background: var(--success);
+            color: var(--primary);
         }
         
-        .method-algo {
+        #stop {
             background: var(--danger);
             color: white;
         }
         
-        .debug-panel {
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 20px;
-            font-family: monospace;
-            font-size: 0.9rem;
-            max-height: 200px;
+        .panels {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .panels {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .panel {
+            background: rgba(25, 27, 50, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(214, 237, 22, 0.2);
+        }
+        
+        .panel h2 {
+            color: var(--accent);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(214, 237, 22, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #history {
+            max-height: 300px;
             overflow-y: auto;
+            padding-right: 10px;
         }
         
-        .debug-entry {
-            margin-bottom: 5px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        #history li {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            background: rgba(5, 7, 29, 0.8);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent);
+            transition: all 0.3s ease;
         }
         
-        .debug-timestamp {
+        #history li:hover {
+            transform: translateX(5px);
+            background: rgba(25, 27, 50, 0.9);
+        }
+        
+        .prediction-container {
+            text-align: center;
+            padding: 25px;
+            background: linear-gradient(135deg, rgba(25, 27, 50, 0.8), rgba(5, 7, 29, 0.9));
+            border-radius: 12px;
+            margin: 25px 0;
+            border: 1px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .prediction-value {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin: 15px 0;
+            text-shadow: 0 0 20px rgba(214, 237, 22, 0.8);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .stat-card {
+            background: rgba(25, 27, 50, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            border: 1px solid rgba(214, 237, 22, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(214, 237, 22, 0.2);
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .accuracy {
+            color: var(--success);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+        
+        .warning {
+            color: var(--warning);
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin-top: 25px;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(214, 237, 22, 0.3);
             color: #aaa;
-            margin-right: 10px;
+            font-size: 0.9rem;
         }
         
-        .debug-message {
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(5, 7, 29, 0.8);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { 
+                opacity: 0.8;
+                text-shadow: 0 0 10px rgba(214, 237, 22, 0.8);
+            }
+            50% { 
+                opacity: 1;
+                text-shadow: 0 0 20px rgba(214, 237, 22, 1);
+            }
+            100% { 
+                opacity: 0.8;
+                text-shadow: 0 0 10px rgba(214, 237, 22, 0.8);
+            }
+        }
+        
+        .real-badge {
+            background: var(--primary);
             color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
         }
         
-        .debug-error {
-            color: var(--danger);
+        .pred-badge {
+            background: var(--accent);
+            color: var(--primary);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
         }
         
-        .debug-success {
+        .api-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .api-connected {
+            background: rgba(0, 255, 136, 0.2);
             color: var(--success);
         }
         
-        .debug-warning {
+        .api-disconnected {
+            background: rgba(255, 77, 77, 0.2);
+            color: var(--danger);
+        }
+        
+        .api-warning {
+            background: rgba(255, 204, 0, 0.2);
+            color: var(--warning);
+        }
+        
+        .connection-test {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(25, 27, 50, 0.5);
+            border-radius: 8px;
+            text-align: left;
+        }
+        
+        .connection-test pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            max-height: 200px;
+            white-space: pre-wrap;
+        }
+        
+        .timestamp {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+        
+        .error {
+            color: var(--danger);
+        }
+        
+        .success {
+            color: var(--success);
+        }
+        
+        .warning-text {
             color: var(--warning);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- [Cabeçalho e estrutura principal permanecem iguais à versão anterior] -->
-        
-        <div class="panel">
-            <h2><i class="fas fa-bug"></i> SISTEMA DE AUTO-CORREÇÃO</h2>
-            <div class="debug-panel" id="debug-console">
-                <!-- Mensagens de debug serão exibidas aqui -->
+        <header>
+            <h1><i class="fas fa-jet-fighter-up"></i> PAINEL AVIATOR - BET7K <i class="fas fa-jet-fighter-up"></i></h1>
+            <p>Sistema Inteligente de Análise e Predição em Tempo Real</p>
+            <div class="api-status api-connected">
+                <i class="fas fa-plug"></i> API CONECTADA
             </div>
+        </header>
+        
+        <div class="status-container">
+            <i class="fas fa-satellite-dish fa-spin"></i>
+            <span id="status">Iniciando conexão com a API...</span>
+        </div>
+        
+        <div class="controls">
+            <button id="start">
+                <i class="fas fa-play"></i> Iniciar Coleta Automática
+            </button>
+            <button id="stop" disabled>
+                <i class="fas fa-stop"></i> Parar Coleta
+            </button>
+            <button id="collect">
+                <i class="fas fa-sync-alt"></i> Coletar Agora
+            </button>
+            <button id="export">
+                <i class="fas fa-file-download"></i> Exportar Dados (CSV)
+            </button>
+        </div>
+        
+        <div class="prediction-container">
+            <h2><i class="fas fa-crystal-ball"></i> PRÓXIMA RODADA</h2>
+            <div class="prediction-value" id="next">--</div>
+            <p>Previsão baseada em análise algorítmica avançada</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <h3><i class="fas fa-bullseye"></i> TAXA DE ACERTO</h3>
+                <div class="stat-value accuracy" id="acertos">0%</div>
+                <p>Precisão nas últimas previsões</p>
+            </div>
+            
+            <div class="stat-card">
+                <h3><i class="fas fa-database"></i> DADOS COLETADOS</h3>
+                <div class="stat-value" id="total">0</div>
+                <p>Rodadas analisadas</p>
+            </div>
+            
+            <div class="stat-card">
+                <h3><i class="fas fa-tachometer-alt"></i> ÚLTIMO RESULTADO</h3>
+                <div class="stat-value" id="last">--</div>
+                <p>Multiplicador real</p>
+            </div>
+        </div>
+        
+        <div class="panels">
+            <div class="panel">
+                <h2><i class="fas fa-history"></i> HISTÓRICO RECENTE</h2>
+                <ul id="history"></ul>
+            </div>
+            
+            <div class="panel">
+                <h2><i class="fas fa-chart-line"></i> ANÁLISE GRÁFICA</h2>
+                <div class="chart-container">
+                    <canvas id="chart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="panel connection-test">
+            <h2><i class="fas fa-network-wired"></i> STATUS DA CONEXÃO API</h2>
+            <pre id="api-response">Testando conexão com a API Bet7K...</pre>
+        </div>
+        
+        <div class="footer">
+            <p>Sistema preditivo para fins educacionais | Ambiente controlado | Não utilize para apostas reais</p>
+            <p>© 2023 Painel Aviator - Conectado à API Bet7K | v2.5</p>
         </div>
     </div>
 
     <script>
-        // Configurações avançadas
-        const CONFIG = {
-            api: {
-                endpoint: "https://bet7k-aviator-api.p.rapidapi.com/bet7k-aviator-latest",
-                headers: {
-                    "x-rapidapi-key": "ccb1876774msh4c1a8059662d066p127853jsn19c4f160820a",
-                    "x-rapidapi-host": "bet7k-aviator-api.p.rapidapi.com"
-                },
-                retries: 3,
-                retryDelay: 2000, // 2 segundos inicial, com backoff exponencial
-                timeout: 5000 // 5 segundos
-            },
-            websocket: {
-                url: "wss://bet7k-websocket.example.com", // URL fictícia - substituir por real
-                reconnectInterval: 5000,
-                maxReconnects: 5
-            },
-            algorithm: {
-                minDataPoints: 10,
-                predictionRange: [1.0, 20.0],
-                noiseFactor: 0.3
-            },
-            collection: {
-                interval: 15000, // 15 segundos
-                maxHistory: 50
-            }
+        // Configurações da API Bet7K
+        const API_ENDPOINT = "https://bet7k-aviator-api.p.rapidapi.com/bet7k-aviator-latest";
+        const API_HEADERS = {
+            "x-rapidapi-key": "ccb1876774msh4c1a8059662d066p127853jsn19c4f160820a",
+            "x-rapidapi-host": "bet7k-aviator-api.p.rapidapi.com"
         };
-
+        
         // Estado do sistema
-        const state = {
-            resultados: [],
-            previsoes: [],
-            acertosCount: 0,
-            coletaAutomatica: null,
-            chart: null,
-            currentMethod: null,
-            wsConnection: null,
-            debugMessages: []
+        let resultados = [];
+        let previsoes = [];
+        let acertosCount = 0;
+        let coletaAutomatica = null;
+        let chart = null;
+        let tentativas = 0;
+        const MAX_TENTATIVAS = 5;
+        const INTERVALO_COLETA = 15000; // 15 segundos
+        
+        // Elementos DOM
+        const domElements = {
+            status: document.getElementById('status'),
+            history: document.getElementById('history'),
+            next: document.getElementById('next'),
+            acertos: document.getElementById('acertos'),
+            total: document.getElementById('total'),
+            last: document.getElementById('last'),
+            start: document.getElementById('start'),
+            stop: document.getElementById('stop'),
+            collect: document.getElementById('collect'),
+            export: document.getElementById('export'),
+            apiResponse: document.getElementById('api-response')
         };
-
-        // Inicialização do sistema
-        async function initSystem() {
-            initChart();
-            addDebugMessage("Sistema iniciado", "success");
-            
-            // Testar todos os métodos de conexão
-            await testAllConnectionMethods();
-            
-            // Iniciar coleta automática
-            startAutoCollection();
+        
+        // Inicialização do gráfico
+        function initChart() {
+            const ctx = document.getElementById('chart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Resultados Reais',
+                            data: [],
+                            borderColor: '#00ff88',
+                            backgroundColor: 'rgba(0, 255, 136, 0.1)',
+                            tension: 0.3,
+                            fill: true,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#00ff88'
+                        },
+                        {
+                            label: 'Previsões',
+                            data: [],
+                            borderColor: '#d6ed16',
+                            borderDash: [5, 5],
+                            backgroundColor: 'transparent',
+                            tension: 0.3,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#d6ed16'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#aaa',
+                                callback: function(value) {
+                                    return value + 'x';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#aaa'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#fff',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(25, 27, 50, 0.95)',
+                            titleColor: '#d6ed16',
+                            bodyColor: '#ffffff',
+                            borderColor: 'rgba(214, 237, 22, 0.5)',
+                            borderWidth: 1,
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.parsed.y.toFixed(2)}x`;
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 500
+                    }
+                }
+            });
         }
-
-        // Testar todos os métodos de conexão disponíveis
-        async function testAllConnectionMethods() {
-            addDebugMessage("Testando métodos de conexão...", "info");
-            
-            // 1. Tentar API principal
-            if (await testAPIConnection()) {
-                state.currentMethod = "API";
-                addDebugMessage("API principal conectada com sucesso", "success");
-                return;
-            }
-            
-            // 2. Tentar WebSocket
-            if (await testWebSocketConnection()) {
-                state.currentMethod = "WebSocket";
-                addDebugMessage("Conexão WebSocket estabelecida", "success");
-                return;
-            }
-            
-            // 3. Usar algoritmo matemático
-            state.currentMethod = "Algorithm";
-            addDebugMessage("Usando algoritmo preditivo como fallback", "warning");
-        }
-
-        // Testar conexão com a API principal
-        async function testAPIConnection() {
+        
+        // Teste inicial de conexão com a API
+        async function testarConexaoAPI() {
             try {
-                addDebugMessage("Testando conexão com API...", "info");
-                const response = await axios.get(CONFIG.api.endpoint, {
-                    headers: CONFIG.api.headers,
-                    timeout: CONFIG.api.timeout
+                domElements.apiResponse.innerHTML = "Testando conexão com a API...";
+                
+                const response = await fetch(API_ENDPOINT, { 
+                    method: 'GET',
+                    headers: API_HEADERS
                 });
                 
-                if (response.data && Array.isArray(response.data)) {
-                    return true;
+                if (!response.ok) {
+                    throw new Error(`Erro na API: ${response.status} ${response.statusText}`);
                 }
-                throw new Error("Formato de dados inválido");
+                
+                const data = await response.json();
+                
+                // Verificar se a resposta é um array
+                if (!Array.isArray(data)) {
+                    throw new Error('Resposta da API em formato inesperado');
+                }
+                
+                // Exibir resultado do teste
+                domElements.apiResponse.innerHTML = 
+                    `<span class="success">✅ Conexão estabelecida com sucesso às ${new Date().toLocaleTimeString()}</span>\n\n` +
+                    `<strong>Últimos resultados:</strong>\n${JSON.stringify(data.slice(0, 5), null, 2)}`;
+                
+                return true;
+                
             } catch (error) {
-                addDebugMessage(`Falha na API: ${error.message}`, "error");
+                console.error('Erro na conexão com a API:', error);
+                domElements.apiResponse.innerHTML = 
+                    `<span class="error">❌ ERRO NA CONEXÃO: ${error.message}</span>\n\n` +
+                    `<strong>Possíveis causas:</strong>\n- Problema de rede\n- Chave API inválida\n- Restrição de CORS\n- API temporariamente indisponível\n- Limite de requisições excedido (429)`;
+                
                 return false;
             }
         }
-
-        // Testar conexão WebSocket alternativa
-        async function testWebSocketConnection() {
-            return new Promise((resolve) => {
-                addDebugMessage("Tentando conexão WebSocket...", "info");
-                
-                // Substituir por URL real do WebSocket
-                state.wsConnection = new WebSocket(CONFIG.websocket.url);
-                
-                state.wsConnection.onopen = () => {
-                    addDebugMessage("WebSocket conectado", "success");
-                    resolve(true);
-                };
-                
-                state.wsConnection.onerror = (error) => {
-                    addDebugMessage(`Erro WebSocket: ${error.message}`, "error");
-                    resolve(false);
-                };
-                
-                state.wsConnection.onmessage = (event) => {
-                    processData(event.data, "WebSocket");
-                };
-                
-                setTimeout(() => {
-                    if (!state.wsConnection || state.wsConnection.readyState !== WebSocket.OPEN) {
-                        addDebugMessage("Timeout WebSocket", "warning");
-                        resolve(false);
-                    }
-                }, 5000);
-            });
-        }
-
-        // Sistema de coleta de dados principal
-        async function collectData() {
-            switch (state.currentMethod) {
-                case "API":
-                    await fetchAPIData();
-                    break;
-                case "WebSocket":
-                    // Dados chegam via eventos WebSocket
-                    break;
-                case "Algorithm":
-                    generateAlgorithmPrediction();
-                    break;
-                default:
-                    await testAllConnectionMethods();
-            }
-        }
-
-        // Obter dados da API principal
-        async function fetchAPIData() {
-            for (let i = 0; i < CONFIG.api.retries; i++) {
-                try {
-                    const response = await axios.get(CONFIG.api.endpoint, {
-                        headers: CONFIG.api.headers,
-                        timeout: CONFIG.api.timeout
-                    });
-                    
-                    if (response.data && Array.isArray(response.data)) {
-                        processData(response.data[0], "API");
-                        return;
-                    }
-                    throw new Error("Dados inválidos");
-                } catch (error) {
-                    const delay = CONFIG.api.retryDelay * Math.pow(2, i);
-                    addDebugMessage(`Tentativa ${i+1} falhou. Tentando novamente em ${delay/1000}s...`, "warning");
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                }
+        
+        // Algoritmo preditivo aprimorado
+        function preverProximo() {
+            if (resultados.length < 5) return null;
+            
+            // Pesos decrescentes para resultados mais recentes
+            const pesos = [0.4, 0.25, 0.15, 0.1, 0.1]; 
+            const ultimos = resultados.slice(-5);
+            
+            // Cálculo da média ponderada
+            let somaPonderada = 0;
+            for (let i = 0; i < 5; i++) {
+                somaPonderada += ultimos[i] * pesos[i];
             }
             
-            // Se todas as tentativas falharem, mudar para WebSocket
-            addDebugMessage("Falha na API, alternando para WebSocket...", "error");
-            state.currentMethod = "WebSocket";
-            await testWebSocketConnection();
+            // Análise de tendência
+            const tendencia = ultimos[0] > ultimos[4] ? 0.15 : -0.1;
+            
+            // Fator de aleatoriedade controlada
+            const ruido = (Math.random() - 0.5) * 0.4;
+            
+            // Limites de segurança
+            const previsao = Math.max(1.00, Math.min(somaPonderada + tendencia + ruido, 20));
+            
+            return previsao;
         }
-
-        // Processar dados recebidos
-        function processData(value, source) {
-            const resultado = parseFloat(value.toFixed(2));
-            state.resultados.push(resultado);
-            
-            // Gerar previsão
-            const previsao = generatePrediction();
-            
-            if (previsao) {
-                state.previsoes.push({
-                    prev: previsao,
-                    real: resultado,
-                    timestamp: new Date().toISOString(),
-                    source: source
+        
+        // Coleta e processamento de dados com tratamento de erro
+        async function coletarDados() {
+            try {
+                tentativas++;
+                updateStatus('Conectando à API Bet7K...', 'fas fa-satellite-dish fa-spin');
+                
+                const response = await fetch(API_ENDPOINT, { 
+                    method: 'GET',
+                    headers: API_HEADERS
                 });
                 
-                updateUI(resultado, previsao, source);
+                if (!response.ok) {
+                    // Tratamento especial para erro 429 (Too Many Requests)
+                    if (response.status === 429) {
+                        throw new Error(`Limite de requisições excedido (429). Aguarde e tente novamente.`);
+                    }
+                    throw new Error(`Erro na API: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                // Verificar se a resposta é um array
+                if (!Array.isArray(data) || data.length === 0) {
+                    throw new Error('Resposta da API em formato inesperado');
+                }
+                
+                // Considerar o primeiro elemento do array como o resultado mais recente
+                const resultado = parseFloat(data[0].toFixed(2));
+                resultados.push(resultado);
+                domElements.last.textContent = resultado.toFixed(2) + 'x';
+                
+                // Gerar previsão para a próxima rodada
+                const previsao = preverProximo();
+                
+                if (previsao) {
+                    previsoes.push({ 
+                        prev: previsao, 
+                        real: resultado,
+                        timestamp: new Date().toISOString()
+                    });
+                    
+                    // Verificar acurácia
+                    const diff = Math.abs(previsao - resultado);
+                    const threshold = 0.5; // Margem de erro aceitável
+                    
+                    if (diff < threshold) {
+                        acertosCount++;
+                        domElements.next.innerHTML = `<span class="pulse">${previsao.toFixed(2)}x</span>`;
+                    } else {
+                        domElements.next.textContent = previsao.toFixed(2) + 'x';
+                    }
+                    
+                    atualizarEstatisticas();
+                    atualizarHistorico(resultado, previsao, diff < threshold);
+                }
+                
+                updateStatus('Dados atualizados com sucesso', 'fas fa-check-circle', 'success');
+                atualizarGrafico();
+                tentativas = 0; // Resetar contador de tentativas
+                
+            } catch (error) {
+                console.error('Erro na coleta:', error);
+                
+                // Mensagem de erro personalizada
+                let mensagemErro = error.message;
+                if (mensagemErro.includes('429')) {
+                    mensagemErro += ' Diminuindo frequência de coleta.';
+                }
+                
+                updateStatus(`Erro: ${mensagemErro}`, 'fas fa-exclamation-triangle', 'error');
+                
+                // Tentar novamente se não excedeu o máximo de tentativas
+                if (tentativas < MAX_TENTATIVAS) {
+                    const tempoEspera = Math.pow(2, tentativas) * 1000; // Backoff exponencial
+                    
+                    updateStatus(`Tentando novamente em ${tempoEspera/1000}s...`, 'fas fa-redo fa-spin', 'warning');
+                    
+                    await new Promise(resolve => setTimeout(resolve, tempoEspera));
+                    await coletarDados();
+                } else {
+                    updateStatus(`Falha após ${tentativas} tentativas`, 'fas fa-times-circle', 'error');
+                }
             }
-            
-            addDebugMessage(`Dados recebidos via ${source}: ${resultado}x`, "success");
         }
-
-        // Gerar previsão com algoritmo matemático
-        function generateAlgorithmPrediction() {
-            if (state.resultados.length < CONFIG.algorithm.minDataPoints) {
-                addDebugMessage("Dados insuficientes para previsão", "warning");
-                return null;
-            }
-            
-            // Algoritmo avançado de previsão
-            const lastResults = state.resultados.slice(-CONFIG.algorithm.minDataPoints);
-            const avg = lastResults.reduce((a, b) => a + b, 0) / lastResults.length;
-            const trend = lastResults[0] > lastResults[lastResults.length - 1] ? 0.2 : -0.1;
-            const noise = (Math.random() - 0.5) * CONFIG.algorithm.noiseFactor;
-            
-            let prediction = avg + trend + noise;
-            prediction = Math.max(CONFIG.algorithm.predictionRange[0], 
-                                Math.min(prediction, CONFIG.algorithm.predictionRange[1]));
-            
-            const simulatedResult = prediction * (0.9 + Math.random() * 0.2); // Simular resultado
-            
-            processData(simulatedResult, "Algorithm");
-            return prediction;
-        }
-
-        // [Funções auxiliares para UI, gráficos, etc. permanecem similares às versões anteriores]
         
-        // Sistema de debug avançado
-        function addDebugMessage(message, type = "info") {
-            const timestamp = new Date().toLocaleTimeString();
-            const entry = document.createElement('div');
-            entry.className = `debug-entry`;
-            entry.innerHTML = `
-                <span class="debug-timestamp">${timestamp}</span>
-                <span class="debug-message debug-${type}">${message}</span>
+        // Atualizações de interface
+        function updateStatus(text, iconClass, type = 'info') {
+            domElements.status.innerHTML = `<i class="${iconClass}"></i> ${text}`;
+            domElements.status.style.color = 
+                type === 'error' ? '#ff4d4d' : 
+                type === 'success' ? '#00ff88' : 
+                type === 'warning' ? '#ffcc00' : '#d6ed16';
+        }
+        
+        function atualizarHistorico(real, previsto, acertou) {
+            const li = document.createElement('li');
+            
+            li.innerHTML = `
+                <div>
+                    <span class="real-badge">REAL: ${real.toFixed(2)}x</span>
+                    <span class="pred-badge">PREV: ${previsto.toFixed(2)}x</span>
+                </div>
+                <div>
+                    ${acertou ? 
+                        '<i class="fas fa-check-circle" style="color:#00ff88"></i>' : 
+                        '<i class="fas fa-times-circle" style="color:#ff4d4d"></i>'}
+                    <span class="timestamp">${new Date().toLocaleTimeString()}</span>
+                </div>
             `;
             
-            document.getElementById('debug-console').prepend(entry);
-            state.debugMessages.push({timestamp, message, type});
+            domElements.history.insertBefore(li, domElements.history.firstChild);
             
-            // Limitar histórico de debug
-            if (document.getElementById('debug-console').children.length > 20) {
-                document.getElementById('debug-console').removeChild(
-                    document.getElementById('debug-console').lastChild
-                );
+            // Limitar histórico
+            if (domElements.history.children.length > 20) {
+                domElements.history.removeChild(domElements.history.lastChild);
             }
         }
-
+        
+        function atualizarEstatisticas() {
+            const totalPrevisoes = previsoes.length;
+            const taxaAcertos = totalPrevisoes > 0 ? 
+                ((acertosCount / totalPrevisoes) * 100).toFixed(1) : 0;
+            
+            domElements.total.textContent = totalPrevisoes;
+            domElements.acertos.textContent = `${taxaAcertos}%`;
+        }
+        
+        function atualizarGrafico() {
+            if (!chart) return;
+            
+            // Atualizar dados reais
+            chart.data.labels.push(`R${resultados.length}`);
+            chart.data.datasets[0].data.push(resultados[resultados.length - 1]);
+            
+            // Atualizar previsões
+            if (previsoes.length > 0) {
+                chart.data.datasets[1].data.push(previsoes[previsoes.length - 1].prev);
+            }
+            
+            // Limitar dados no gráfico
+            const maxDataPoints = 15;
+            if (chart.data.labels.length > maxDataPoints) {
+                chart.data.labels.shift();
+                chart.data.datasets[0].data.shift();
+                chart.data.datasets[1].data.shift();
+            }
+            
+            chart.update();
+        }
+        
+        // Controles
+        function iniciarColetaAutomatica() {
+            if (coletaAutomatica) return;
+            
+            coletaAutomatica = setInterval(() => {
+                coletarDados();
+            }, INTERVALO_COLETA);
+            
+            domElements.start.disabled = true;
+            domElements.stop.disabled = false;
+            updateStatus(`Coleta automática ativa (a cada ${INTERVALO_COLETA/1000}s)`, 'fas fa-sync-alt fa-spin');
+        }
+        
+        function pararColetaAutomatica() {
+            if (coletaAutomatica) {
+                clearInterval(coletaAutomatica);
+                coletaAutomatica = null;
+            }
+            
+            domElements.start.disabled = false;
+            domElements.stop.disabled = true;
+            updateStatus('Coleta automática parada', 'fas fa-pause-circle');
+        }
+        
+        function exportarCSV() {
+            if (previsoes.length === 0) {
+                updateStatus('Nenhum dado para exportar', 'fas fa-exclamation-circle', 'error');
+                return;
+            }
+            
+            try {
+                let csvContent = "Timestamp,Previsto,Real,Acerto\n";
+                
+                previsoes.forEach(p => {
+                    const diff = Math.abs(p.prev - p.real);
+                    const acerto = diff < 0.5 ? "Sim" : "Não";
+                    csvContent += `${p.timestamp},${p.prev.toFixed(2)},${p.real.toFixed(2)},${acerto}\n`;
+                });
+                
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                
+                link.setAttribute('href', url);
+                link.setAttribute('download', `dados_aviator_${new Date().toISOString().slice(0, 10)}.csv`);
+                link.style.visibility = 'hidden';
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                updateStatus('Dados exportados com sucesso', 'fas fa-file-download', 'success');
+                
+            } catch (error) {
+                console.error('Erro na exportação:', error);
+                updateStatus('Erro ao exportar dados', 'fas fa-exclamation-triangle', 'error');
+            }
+        }
+        
+        // Event Listeners
+        domElements.start.addEventListener('click', iniciarColetaAutomatica);
+        domElements.stop.addEventListener('click', pararColetaAutomatica);
+        domElements.collect.addEventListener('click', coletarDados);
+        domElements.export.addEventListener('click', exportarCSV);
+        
         // Inicialização
-        window.addEventListener('DOMContentLoaded', initSystem);
+        window.addEventListener('DOMContentLoaded', async () => {
+            initChart();
+            
+            // Testar conexão com a API
+            const conectado = await testarConexaoAPI();
+            
+            if (conectado) {
+                // Iniciar coleta de dados
+                coletarDados();
+            } else {
+                updateStatus('Falha na conexão com a API', 'fas fa-exclamation-triangle', 'error');
+            }
+        });
     </script>
 </body>
 </html>
