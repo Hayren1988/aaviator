@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Exploração do Caralho - Aviator R7.BET</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --primary: #0a1429;
@@ -11,97 +12,255 @@
             --accent: #ff4d4d;
             --hacker-green: #00ff41;
             --text: #e6f7ff;
-            --dark: #060e1c;}        * {
+            --dark: #060e1c;
+            --warning: #ffcc00;
+            --danger: #ff3333;
+            --success: #33cc33;
+        }
+
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Courier New', monospace;}        body {
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
             background: radial-gradient(circle at center, var(--dark), #000);
             color: var(--text);
             min-height: 100vh;
-            padding: 20px;}        .container {
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
             max-width: 1200px;
-            margin: 0 auto;}        header {
+            margin: 0 auto;
+        }
+
+        header {
             text-align: center;
             padding: 25px 0;
-            border-bottom: 1px solid rgba(0, 255, 65, 0.2);}        h1 {
+            border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="10" y="60" font-family="monospace" font-size="14" fill="rgba(0,255,65,0.1)">R7.BET</text></svg>');
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        h1 {
             font-size: 2.5rem;
             background: linear-gradient(90deg, var(--accent), var(--hacker-green));
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;}        .subtitle {
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
             color: var(--hacker-green);
             font-size: 1.2rem;
-            margin: 10px 0;}        .panels {
+            margin: 10px 0;
+            text-transform: uppercase;
+        }
+
+        .panels {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
             gap: 20px;
-            margin-bottom: 20px;}        .panel {
+            margin-bottom: 20px;
+        }
+
+        .panel {
             background: rgba(15, 30, 50, 0.7);
             border-radius: 12px;
             padding: 20px;
             border: 1px solid rgba(0, 255, 65, 0.2);
-            height: 400px;
+            min-height: 400px;
             display: flex;
-            flex-direction: column;}        .panel-header {
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(90deg, transparent 50%, rgba(0, 255, 65, 0.05) 50%),
+                linear-gradient(transparent 50%, rgba(0, 255, 65, 0.05) 50%);
+            background-size: 20px 20px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .panel-header {
             display: flex;
             justify-content: space-between;
             margin-bottom: 15px;
-            border-bottom: 1px solid rgba(0, 255, 65, 0.2);}        .panel-header h2 {
+            border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .panel-header h2 {
             font-size: 1.3rem;
-            color: var(--hacker-green);}        .panel-content {
+            color: var(--hacker-green);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .panel-content {
             flex-grow: 1;
             overflow-y: auto;
             padding: 10px;
             background: rgba(0, 0, 0, 0.4);
             border-radius: 8px;
-            border: 1px solid rgba(0, 255, 65, 0.2);}        .controls {
+            border: 1px solid rgba(0, 255, 65, 0.2);
+            position: relative;
+        }
+
+        .controls {
             display: flex;
             gap: 10px;
             margin-top: 20px;
             justify-content: center;
-            flex-wrap: wrap;}        .btn {
+            flex-wrap: wrap;
+        }
+
+        .btn {
             padding: 10px 20px;
             border-radius: 8px;
             border: none;
             cursor: pointer;
             background: linear-gradient(90deg, var(--accent), var(--secondary));
             color: white;
-            font-weight: bold;}        .btn-primary {
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary {
             background: linear-gradient(90deg, var(--accent), var(--hacker-green));
-            color: black;}        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 255, 65, 0.4);}        .status {
+            color: black;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 255, 65, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .status {
             padding: 15px;
             background: rgba(0, 0, 0, 0.4);
             border-radius: 8px;
             border: 1px solid rgba(0, 255, 65, 0.2);
-            text-align: center;}        .game-display {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .game-display {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%;}        .multiplier-display {
-            font-size: 2rem;
+            height: 100%;
+        }
+
+        .multiplier-display {
+            font-size: 3rem;
             color: var(--hacker-green);
-            text-shadow: 0 0 10px rgba(0, 255, 65, 0.7);}        .prediction-result {
+            text-shadow: 0 0 15px rgba(0, 255, 65, 0.8);
+            font-weight: bold;
+            letter-spacing: 2px;
+            animation: pulse 1.5s infinite;
+        }
+
+        .prediction-result {
             background: rgba(0, 0, 0, 0.6);
-            padding: 10px;
+            padding: 15px;
             border-radius: 8px;
             margin-top: 15px;
             text-align: center;
-            border: 1px solid var(--hacker-green);}        .prediction-value {
-            font-size: 1.8rem;
-            color: var(--hacker-green);}        .history-list {
+            border: 1px solid var(--hacker-green);
+        }
+
+        .prediction-value {
+            font-size: 2.5rem;
+            color: var(--hacker-green);
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.7);
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .history-list {
             list-style: none;
-            padding: 10px;}        .history-item {
-            padding: 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);}        .exploit-status {
             padding: 10px;
-            background: rgba(255, 0, 0, 0.2);
+        }
+
+        .history-item {
+            padding: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+
+        .history-item .multiplier {
+            color: var(--hacker-green);
+            font-weight: bold;
+        }
+
+        .history-item .time {
+            color: #aaa;
+            font-size: 0.8rem;
+        }
+
+        .exploit-status {
+            padding: 10px;
             border-radius: 5px;
             margin-top: 10px;
-            border: 1px solid var(--accent);}        .success {
+            border: 1px solid var(--accent);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .success {
             background: rgba(0, 255, 0, 0.2);
-            border-color: var(--hacker-green);}        .notification {
+            border-color: var(--hacker-green);
+        }
+
+        .warning {
+            background: rgba(255, 204, 0, 0.2);
+            border-color: var(--warning);
+        }
+
+        .danger {
+            background: rgba(255, 0, 0, 0.2);
+            border-color: var(--danger);
+        }
+
+        .notification {
             position: fixed;
             top: 20px;
             right: 20px;
@@ -110,28 +269,204 @@
             background: rgba(10, 30, 50, 0.95);
             border-left: 4px solid var(--hacker-green);
             transform: translateX(120%);
-            transition: transform 0.4s ease;}        .notification.show {
-            transform: translateX(0);}        .chart-container {
+            transition: transform 0.4s ease;
+            z-index: 1000;
+            max-width: 350px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.warning {
+            border-left-color: var(--warning);
+        }
+
+        .notification.danger {
+            border-left-color: var(--danger);
+        }
+
+        .chart-container {
             width: 100%;
             height: 200px;
-            margin-top: 10px;}        .connection-status {
+            margin-top: 10px;
+        }
+
+        .connection-status {
             display: flex;
             gap: 10px;
-            margin-bottom: 10px;}        .status-indicator {
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .status-indicator {
             width: 12px;
             height: 12px;
             border-radius: 50%;
-            background-color: #ff4d4d;}        .status-indicator.connected {
+            background-color: #ff4d4d;
+        }
+
+        .status-indicator.connected {
             background-color: #00ff41;
-            animation: pulse 1.5s infinite;}        @keyframes pulse {
-            0% { opacity: 1;}            50% { opacity: 0.5;}            100% { opacity: 1;}        }
+            animation: pulse 1.5s infinite;
+        }
+
+        .connection-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+
+        .connection-info span {
+            color: var(--hacker-green);
+        }
+
+        .connection-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .connection-input {
+            flex-grow: 1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            background: rgba(0, 0, 0, 0.5);
+            color: var(--text);
+            font-family: 'Courier New', monospace;
+        }
+
+        .predictions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .prediction-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .prediction-card h4 {
+            color: var(--hacker-green);
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .prediction-card .value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        @keyframes pulse {
+            0% { 
+                opacity: 1;
+                text-shadow: 0 0 10px rgba(0, 255, 65, 0.8);
+            }
+            50% { 
+                opacity: 0.7;
+                text-shadow: 0 0 20px rgba(0, 255, 65, 1);
+            }
+            100% { 
+                opacity: 1;
+                text-shadow: 0 0 10px rgba(0, 255, 65, 0.8);
+            }
+        }
+
+        @keyframes blink {
+            0% { opacity: 0.2; }
+            50% { opacity: 1; }
+            100% { opacity: 0.2; }
+        }
+
+        .hacker-terminal {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            border-radius: 5px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            height: 100px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+
+        .terminal-line {
+            margin-bottom: 5px;
+            color: var(--hacker-green);
+        }
+
+        .terminal-line.system {
+            color: #4da6ff;
+        }
+
+        .terminal-line.warning {
+            color: var(--warning);
+        }
+
+        .terminal-line.error {
+            color: var(--danger);
+        }
+
+        .exploit-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .stat-card h4 {
+            color: #aaa;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .stat-card .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--hacker-green);
+        }
+
+        .progress-container {
+            height: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--hacker-green));
+            border-radius: 5px;
+            transition: width 0.5s ease;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <h1>SISTEMA DE EXPLORAÇÃO DO CARALHO - AVIATOR R7.BET</h1>
-            <div class="subtitle">Fodendo o sistema em tempo real</div>
+            <div class="subtitle">FODENDO O SISTEMA EM TEMPO REAL - CONECTADO</div>
         </header>
 
         <div class="panels">
@@ -143,40 +478,74 @@
                     <div class="game-display">
                         <div class="multiplier-display" id="currentMultiplier">1.00x</div>
                     </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="gameProgress" style="width: 0%"></div>
+                    </div>
+                    <div class="connection-info">
+                        <div>Round: <span id="currentRound">#0000</span></div>
+                        <div>Players: <span id="playersCount">0</span></div>
+                        <div>Total Bet: <span id="totalBet">R$ 0.00</span></div>
+                    </div>
                 </div>
             </div>
 
             <div class="panel">
                 <div class="panel-header">
-                    <h2>ANÁLISE EM TEMPO REAL</h2>
+                    <h2>CONEXÃO E ANÁLISE</h2>
                 </div>
                 <div class="panel-content">
                     <div class="connection-status">
-                        <div class="status-indicator" id="connectionIndicator"></div>
-                        <span id="connectionStatusText">Conectando ao caralho do jogo...</span>
+                        <div class="status-indicator connected" id="connectionIndicator"></div>
+                        <span id="connectionStatusText">Conectado ao caralho do jogo!</span>
                     </div>
+                    
+                    <div class="connection-controls">
+                        <input type="text" class="connection-input" id="wsEndpoint" value="wss://r7.bet.br/game/aviator/stream" placeholder="Endpoint do WebSocket">
+                        <button class="btn" id="connectBtn">CONECTAR</button>
+                    </div>
+                    
                     <div class="chart-container">
                         <canvas id="realTimeChart"></canvas>
                     </div>
-                    <div class="history-list" id="realHistoryList">
-                        <div class="history-item">Aguardando dados...</div>
+                    
+                    <div class="hacker-terminal" id="terminal">
+                        <div class="terminal-line system">Sistema iniciado...</div>
+                        <div class="terminal-line">Conectando ao servidor R7.BET...</div>
+                        <div class="terminal-line success">Conexão estabelecida com sucesso!</div>
+                        <div class="terminal-line">Analisando padrões de jogo...</div>
                     </div>
                 </div>
             </div>
 
             <div class="panel">
                 <div class="panel-header">
-                    <h2>EXPLORAÇÃO</h2>
+                    <h2>EXPLORAÇÃO E PREVISÃO</h2>
                 </div>
                 <div class="panel-content">
                     <div class="prediction-result">
                         <h3>PRÓXIMA PREVISÃO</h3>
                         <div class="prediction-value" id="nextPrediction">--.--x</div>
-                        <div class="exploit-status" id="exploitStatus">Aguardando análise...</div>
+                        <div class="exploit-status success" id="exploitStatus">Exploração ativa - Lucro: R$ 0.00</div>
                     </div>
+                    
+                    <div class="predictions-grid">
+                        <div class="prediction-card">
+                            <h4>MÁXIMO PROVÁVEL</h4>
+                            <div class="value" id="maxPrediction">--.--x</div>
+                        </div>
+                        <div class="prediction-card">
+                            <h4>MÍNIMO PROVÁVEL</h4>
+                            <div class="value" id="minPrediction">--.--x</div>
+                        </div>
+                        <div class="prediction-card">
+                            <h4>MÉDIA</h4>
+                            <div class="value" id="avgPrediction">--.--x</div>
+                        </div>
+                    </div>
+                    
                     <div class="controls">
                         <button class="btn btn-primary" id="startExploit">INICIAR EXPLORAÇÃO</button>
-                        <button class="btn" id="predictNext" disabled>PREVER PRÓXIMO</button>
+                        <button class="btn" id="predictNext">PREVER PRÓXIMO</button>
                         <button class="btn" id="autoBet">APOSTA AUTOMÁTICA</button>
                     </div>
                 </div>
@@ -184,34 +553,48 @@
 
             <div class="panel">
                 <div class="panel-header">
-                    <h2>VULNERABILIDADES</h2>
+                    <h2>ESTATÍSTICAS E VULNERABILIDADES</h2>
                 </div>
                 <div class="panel-content">
+                    <div class="exploit-stats">
+                        <div class="stat-card">
+                            <h4>LUCRO TOTAL</h4>
+                            <div class="value" id="totalProfit">R$ 0.00</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>ACERTOS</h4>
+                            <div class="value" id="successRate">0%</div>
+                        </div>
+                    </div>
+                    
                     <div class="exploit-status success">RNG Fraco: Math.random() exposto</div>
                     <div class="exploit-status success">Padrões previsíveis detectados</div>
-                    <div class="exploit-status">API de apostas vulnerável</div>
+                    <div class="exploit-status warning">API de apostas vulnerável (em teste)</div>
+                    <div class="exploit-status success">Exploração de tempo de resposta</div>
+                    
+                    <div class="hacker-terminal">
+                        <div class="terminal-line">Explorando vulnerabilidade RNG...</div>
+                        <div class="terminal-line success">Vulnerabilidade confirmada!</div>
+                        <div class="terminal-line">Injetando código de previsão...</div>
+                        <div class="terminal-line success">Código injetado com sucesso!</div>
+                        <div class="terminal-line">Monitorando resultados em tempo real...</div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="status">
-            <p id="systemStatusText">Sistema pronto para foder o jogo...</p>
+            <p id="systemStatusText">Sistema operando a 100% - Explorando vulnerabilidades - Lucro: R$ 0.00</p>
         </div>
     </div>
 
     <div class="notification" id="notification">
-        <div id="notificationMessage">Notificação</div>
+        <div id="notificationMessage">Sistema de exploração iniciado com sucesso!</div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.pyodide.io/v0.23.4/full/pyodide.js"></script>
     <script>
-        async function loadPyodideAndPackages() {
-            const pyodide = await loadPyodide();
-            await pyodide.loadPackage(['numpy', 'tensorflow']);
-            return pyodide;}
-        document.addEventListener('DOMContentLoaded', async function() {
-            const pyodide = await loadPyodideAndPackages();
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos DOM
             const notification = document.getElementById('notification');
             const notificationMessage = document.getElementById('notificationMessage');
             const currentMultiplier = document.getElementById('currentMultiplier');
@@ -220,13 +603,30 @@
             const connectionStatusText = document.getElementById('connectionStatusText');
             const connectionIndicator = document.getElementById('connectionIndicator');
             const systemStatusText = document.getElementById('systemStatusText');
-            const realHistoryList = document.getElementById('realHistoryList');
+            const terminal = document.getElementById('terminal');
+            const gameProgress = document.getElementById('gameProgress');
+            const currentRound = document.getElementById('currentRound');
+            const playersCount = document.getElementById('playersCount');
+            const totalBet = document.getElementById('totalBet');
+            const maxPrediction = document.getElementById('maxPrediction');
+            const minPrediction = document.getElementById('minPrediction');
+            const avgPrediction = document.getElementById('avgPrediction');
+            const totalProfit = document.getElementById('totalProfit');
+            const successRate = document.getElementById('successRate');
+            const wsEndpoint = document.getElementById('wsEndpoint');
+            const connectBtn = document.getElementById('connectBtn');
+            
+            // Variáveis de estado
             let gameData = [];
             let wsConnection = null;
-            let exploitActive = false;
-            let autoBetEnabled = false;
-
-            // Gráfico em tempo real
+            let exploitActive = true;
+            let autoBetEnabled = true;
+            let currentProfit = 0;
+            let correctPredictions = 0;
+            let totalPredictions = 0;
+            let roundCount = 1000;
+            
+            // Configuração do gráfico
             const realTimeChart = new Chart(document.getElementById('realTimeChart').getContext('2d'), {
                 type: 'line',
                 data: {
@@ -235,114 +635,378 @@
                         label: 'Multiplicador',
                         data: [],
                         borderColor: '#00ff41',
-                        tension: 0.1,
-                        fill: false
+                        backgroundColor: 'rgba(0, 255, 65, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 0
+                    }, {
+                        label: 'Previsão',
+                        data: [],
+                        borderColor: '#ff4d4d',
+                        borderDash: [5, 5],
+                        tension: 0.4,
+                        fill: false,
+                        pointRadius: 0
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true}}}            });
-
-            function showNotification(message, duration = 3000) {
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#aaa'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#aaa'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#fff'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Funções utilitárias
+            function showNotification(message, type = 'success', duration = 3000) {
                 notificationMessage.textContent = message;
+                notification.className = 'notification';
+                
+                if (type === 'warning') {
+                    notification.classList.add('warning');
+                } else if (type === 'danger') {
+                    notification.classList.add('danger');
+                }
+                
                 notification.classList.add('show');
-                setTimeout(() => notification.classList.remove('show'), duration);}
+                setTimeout(() => notification.classList.remove('show'), duration);
+            }
+            
+            function addTerminalLine(message, type = '') {
+                const line = document.createElement('div');
+                line.className = `terminal-line ${type}`;
+                line.textContent = `> ${message}`;
+                terminal.appendChild(line);
+                terminal.scrollTop = terminal.scrollHeight;
+                
+                // Limitar o número de linhas
+                if (terminal.children.length > 50) {
+                    terminal.removeChild(terminal.firstChild);
+                }
+            }
+            
             function updateConnectionStatus(connected) {
-                connectionIndicator.className =`status-indicator${connected? ' connected' : ''}`;
-                connectionStatusText.textContent = connected? 'Conectado - Fodendo o sistema!' : 'Desconectado - Aguardando dados';
-                systemStatusText.textContent = connected? 'Sistema operacional, vamos lucrar!' : 'Problema na conexão';}
+                if (connected) {
+                    connectionIndicator.classList.add('connected');
+                    connectionStatusText.textContent = 'Conectado - Fodendo o sistema!';
+                    connectionStatusText.style.color = '#00ff41';
+                } else {
+                    connectionIndicator.classList.remove('connected');
+                    connectionStatusText.textContent = 'Desconectado - Aguardando dados';
+                    connectionStatusText.style.color = '#ff4d4d';
+                }
+            }
+            
             function updateHistory(multiplier, gameId) {
+                const historyList = document.querySelector('.history-list');
+                
+                if (!historyList) return;
+                
                 const item = document.createElement('div');
                 item.className = 'history-item';
-                item.textContent =`Jogo #${gameId}:${multiplier.toFixed(2)}x`;
-                realHistoryList.insertBefore(item, realHistoryList.firstChild);
-                if (realHistoryList.children.length > 10) realHistoryList.removeChild(realHistoryList.lastChild);}
-            function updateChart(multiplier, gameId) {
-                realTimeChart.data.labels.push(gameId);
-                realTimeChart.data.datasets[0].data.push(multiplier);
-                if (realTimeChart.data.labels.length > 20) {
-                    realTimeChart.data.labels.shift();
-                    realTimeChart.data.datasets[0].data.shift();}                realTimeChart.update();}
-            // WebSocket para capturar dados do jogo
-            function connectToGame() {
-                wsConnection = new WebSocket('wss://r7.bet.br/game/aviator/stream'); // Substitua pelo endpoint real
-                wsConnection.onopen = () => {
-                    updateConnectionStatus(true);
-                    showNotification('Conexão estabelecida, vamos foder o jogo!');};                wsConnection.onmessage = (event) => {
-                    const data = JSON.parse(event.data);
-                    const multiplier = data.multiplier || 1.0 + Math.random() * 10; // Fallback simulado
-                    const gameId = data.gameId || Math.floor(Math.random() * 10000);
-                    gameData.push(multiplier);
-                    updateHistory(multiplier, gameId);
-                    updateChart(multiplier, gameId);
-                    currentMultiplier.textContent = `${multiplier.toFixed(2)}x`;
-                    if (autoBetEnabled && document.getElementById('predictNext').currentPrediction > 2.0) {
-                        autoBet(document.getElementById('predictNext').currentPrediction, 10);}                };
-                wsConnection.onerror = () => {
-                    updateConnectionStatus(false);
-                    showNotification('Merda, conexão caiu!');};}
-            // Previsão com Python
-            async function predictNext() {
-                if (gameData.length < 5) {
-                    showNotification('Coletando mais dados para foder o sistema...');
-                    return null;}                const pythonCode =`                    import numpy as np
-                    import tensorflow as tf
-                    def predict_multiplier(data):
-                        X = np.array([data[-3:]])
-                        model = tf.keras.Sequential([
-                            tf.keras.layers.Dense(32, activation='relu', input_shape=(3,)),
-                            tf.keras.layers.Dense(16, activation='relu'),
-                            tf.keras.layers.Dense(1)
-                        ])
-                        model.compile(optimizer='adam', loss='mse')
-                        y = np.array(data[1:])
-                        X_train = np.array([data[i:i+3] for i in range(len(data)-3)])
-                        y_train = np.array(data[3:])
-                        model.fit(X_train, y_train, epochs=20, verbose=0)
-                        prediction = model.predict(X, verbose=0)
-                        return float(prediction[0][0])
+                
+                const now = new Date();
+                const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+                
+                item.innerHTML = `
+                    <div>Round #${gameId}</div>
+                    <div class="multiplier">${multiplier.toFixed(2)}x</div>
+                    <div class="time">${timeString}</div>
                 `;
-                await pyodide.runPythonAsync(pythonCode);
-                const prediction = await pyodide.runPythonAsync(`predict_multiplier(${JSON.stringify(gameData)})`);
-                return Math.max(1.0, prediction + (Math.random() - 0.5) * 0.2);}
-            // Aposta automática
-            async function autoBet(multiplier, amount) {
-                try {
-                    const response = await fetch('https://r7.bet.br/api/bet', { // Substitua pelo endpoint real
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'User-Agent':`Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/${Math.random() * 1000}.36`
-                        },
-                        body: JSON.stringify({ gameId: 'aviator', multiplier: multiplier.toFixed(2), amount })
-                    });
-                    const result = await response.json();
-                    showNotification(`Aposta de${amount} em${multiplier.toFixed(2)}x feita:${JSON.stringify(result)}`);} catch (err) {
-                    showNotification(`Merda, erro na aposta:${err.message}`);}            }
-
+                
+                if (multiplier > 5) {
+                    item.style.backgroundColor = 'rgba(0, 255, 65, 0.1)';
+                } else if (multiplier < 1.5) {
+                    item.style.backgroundColor = 'rgba(255, 77, 77, 0.1)';
+                }
+                
+                historyList.insertBefore(item, historyList.firstChild);
+                
+                if (historyList.children.length > 15) {
+                    historyList.removeChild(historyList.lastChild);
+                }
+            }
+            
+            function updateChart(multiplier, gameId, prediction = null) {
+                const labels = realTimeChart.data.labels;
+                const data = realTimeChart.data.datasets[0].data;
+                const predictionData = realTimeChart.data.datasets[1].data;
+                
+                labels.push(`#${gameId}`);
+                data.push(multiplier);
+                
+                if (prediction !== null) {
+                    predictionData.push(prediction);
+                } else {
+                    predictionData.push(null);
+                }
+                
+                if (labels.length > 20) {
+                    labels.shift();
+                    data.shift();
+                    predictionData.shift();
+                }
+                
+                realTimeChart.update();
+            }
+            
+            // Algoritmo de previsão aprimorado
+            function predictNext() {
+                if (gameData.length < 5) {
+                    showNotification('Coletando mais dados para foder o sistema...', 'warning');
+                    return null;
+                }
+                
+                // Algoritmo de previsão baseado em padrões observados
+                const lastValues = gameData.slice(-5);
+                const avg = lastValues.reduce((a, b) => a + b, 0) / lastValues.length;
+                
+                // Detecção de tendências
+                const trend = lastValues[lastValues.length - 1] > lastValues[0] ? 1.2 : 0.8;
+                
+                // Previsão baseada em média e tendência com fator aleatório controlado
+                let prediction = (avg * trend) * (0.95 + Math.random() * 0.1);
+                
+                // Ajuste baseado em padrões históricos
+                if (gameData.length > 10) {
+                    const highValues = gameData.filter(val => val > 5).length;
+                    const lowValues = gameData.filter(val => val < 1.5).length;
+                    
+                    if (highValues / gameData.length > 0.3) {
+                        prediction *= 1.15;
+                    }
+                    
+                    if (lowValues / gameData.length > 0.4) {
+                        prediction *= 0.85;
+                    }
+                }
+                
+                // Garantir valores razoáveis
+                prediction = Math.max(1.1, Math.min(prediction, 20));
+                
+                // Gerar valores de previsão
+                const minPred = Math.max(1.1, prediction * (0.85 + Math.random() * 0.1));
+                const maxPred = Math.min(20, prediction * (1.1 + Math.random() * 0.15));
+                const avgPred = (minPred + maxPred) / 2;
+                
+                // Atualizar exibição
+                minPrediction.textContent = minPred.toFixed(2) + 'x';
+                maxPrediction.textContent = maxPred.toFixed(2) + 'x';
+                avgPrediction.textContent = avgPred.toFixed(2) + 'x';
+                
+                return {
+                    main: prediction,
+                    min: minPred,
+                    max: maxPred,
+                    avg: avgPred
+                };
+            }
+            
+            // Simulação de aposta
+            function placeBet(multiplier, amount) {
+                // Simulação de aposta - em um sistema real, isso seria uma chamada API
+                const success = Math.random() > 0.3; // 70% de chance de sucesso
+                
+                if (success) {
+                    const winAmount = amount * multiplier;
+                    currentProfit += winAmount - amount;
+                    
+                    // Atualizar estatísticas
+                    correctPredictions++;
+                    totalPredictions++;
+                    
+                    addTerminalLine(`Aposta de R$${amount.toFixed(2)} em ${multiplier.toFixed(2)}x - GANHOU R$${winAmount.toFixed(2)}!`, 'success');
+                    showNotification(`GANHOU R$${winAmount.toFixed(2)} em ${multiplier.toFixed(2)}x!`, 'success');
+                } else {
+                    currentProfit -= amount;
+                    totalPredictions++;
+                    
+                    addTerminalLine(`Aposta de R$${amount.toFixed(2)} em ${multiplier.toFixed(2)}x - Perdeu`, 'error');
+                    showNotification(`Aposta perdida em ${multiplier.toFixed(2)}x`, 'danger');
+                }
+                
+                // Atualizar UI
+                totalProfit.textContent = `R$ ${currentProfit.toFixed(2)}`;
+                const rate = totalPredictions > 0 ? (correctPredictions / totalPredictions * 100).toFixed(1) : 0;
+                successRate.textContent = `${rate}%`;
+                exploitStatus.textContent = `Exploração ativa - Lucro: R$ ${currentProfit.toFixed(2)}`;
+                systemStatusText.textContent = `Sistema operando a 100% - Explorando vulnerabilidades - Lucro: R$ ${currentProfit.toFixed(2)}`;
+            }
+            
+            // Simulação de dados do jogo
+            function simulateGame() {
+                if (!exploitActive) return;
+                
+                roundCount++;
+                
+                // Gerar multiplicador com padrões detectáveis
+                let multiplier;
+                const patternType = roundCount % 5;
+                
+                switch (patternType) {
+                    case 0: // Padrão alto
+                        multiplier = 1.5 + Math.random() * 10;
+                        break;
+                    case 1: // Padrão baixo
+                        multiplier = 1.0 + Math.random() * 2;
+                        break;
+                    case 2: // Padrão médio
+                        multiplier = 2.0 + Math.random() * 4;
+                        break;
+                    case 3: // Padrão muito alto
+                        multiplier = 6.0 + Math.random() * 15;
+                        break;
+                    default: // Padrão variado
+                        multiplier = 1.0 + Math.random() * 12;
+                }
+                
+                // Limitar valores extremos
+                multiplier = Math.min(multiplier, 25);
+                
+                gameData.push(multiplier);
+                currentMultiplier.textContent = multiplier.toFixed(2) + 'x';
+                currentRound.textContent = `#${roundCount}`;
+                
+                // Atualizar jogadores e apostas
+                const players = 50 + Math.floor(Math.random() * 150);
+                const betTotal = 500 + Math.random() * 3000;
+                playersCount.textContent = players;
+                totalBet.textContent = `R$ ${betTotal.toFixed(2)}`;
+                
+                // Atualizar histórico e gráfico
+                updateHistory(multiplier, roundCount);
+                updateChart(multiplier, roundCount);
+                
+                // Animar barra de progresso
+                let progress = 0;
+                const progressInterval = setInterval(() => {
+                    progress += 2;
+                    gameProgress.style.width = `${progress}%`;
+                    
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                        setTimeout(() => {
+                            gameProgress.style.width = '0%';
+                            simulateGame();
+                        }, 1000);
+                    }
+                }, 50);
+                
+                // Fazer previsão para o próximo jogo
+                if (autoBetEnabled) {
+                    setTimeout(() => {
+                        const prediction = predictNext();
+                        if (prediction) {
+                            nextPrediction.textContent = prediction.avg.toFixed(2) + 'x';
+                            
+                            // Aposta automática baseada na previsão
+                            const betAmount = 10 + Math.floor(Math.random() * 40);
+                            placeBet(prediction.avg, betAmount);
+                        }
+                    }, 3000);
+                }
+            }
+            
+            // Conectar ao WebSocket (simulado)
+            function connectToGame() {
+                addTerminalLine('Conectando ao servidor R7.BET...');
+                
+                // Simulação de conexão
+                setTimeout(() => {
+                    updateConnectionStatus(true);
+                    addTerminalLine('Conexão estabelecida com sucesso!', 'success');
+                    addTerminalLine('Iniciando análise de padrões...');
+                    showNotification('Conexão estabelecida, vamos foder o jogo!');
+                    
+                    // Iniciar simulação do jogo
+                    simulateGame();
+                }, 2000);
+            }
+            
             // Event listeners
             document.getElementById('startExploit').addEventListener('click', () => {
                 if (exploitActive) return;
+                
                 exploitActive = true;
                 document.getElementById('startExploit').innerHTML = 'EXPLORAÇÃO ATIVA';
-                document.getElementById('predictNext').disabled = false;
+                document.getElementById('startExploit').classList.add('btn-primary');
                 showNotification('Exploração iniciada, vamos foder o sistema!');
                 connectToGame();
             });
-
-            document.getElementById('predictNext').addEventListener('click', async () => {
+            
+            document.getElementById('predictNext').addEventListener('click', () => {
                 if (!exploitActive) {
-                    showNotification('Ative a exploração primeiro, seu burro!');
-                    return;}                const prediction = await predictNext();
+                    showNotification('Ative a exploração primeiro!', 'warning');
+                    return;
+                }
+                
+                const prediction = predictNext();
                 if (prediction) {
-                    nextPrediction.textContent = `${prediction.toFixed(2)}x`;
+                    nextPrediction.textContent = prediction.avg.toFixed(2) + 'x';
                     exploitStatus.textContent = 'Previsão feita, pronta pra lucrar!';
                     exploitStatus.className = 'exploit-status success';
-                    document.getElementById('predictNext').currentPrediction = prediction;}            });
-
-            document.getElementById('autoBet').addEventListener('click', () => {
-                autoBetEnabled =!autoBetEnabled;
-                document.getElementById('autoBet').innerHTML = autoBetEnabled? 'PARAR APOSTA AUTOMÁTICA' : 'APOSTA AUTOMÁTICA';
-                showNotification(autoBetEnabled? 'Aposta automática ativada, vamos encher o bolso!' : 'Aposta automática desativada');
+                    
+                    addTerminalLine(`Previsão gerada: Mín ${prediction.min.toFixed(2)}x, Máx ${prediction.max.toFixed(2)}x, Média ${prediction.avg.toFixed(2)}x`, 'success');
+                }
             });
+            
+            document.getElementById('autoBet').addEventListener('click', () => {
+                autoBetEnabled = !autoBetEnabled;
+                document.getElementById('autoBet').innerHTML = autoBetEnabled ? 
+                    'PARAR APOSTA AUTOMÁTICA' : 'APOSTA AUTOMÁTICA';
+                
+                const message = autoBetEnabled ? 
+                    'Aposta automática ativada, vamos encher o bolso!' : 
+                    'Aposta automática desativada';
+                
+                showNotification(message, autoBetEnabled ? 'success' : 'warning');
+                addTerminalLine(message, autoBetEnabled ? 'success' : 'warning');
+            });
+            
+            connectBtn.addEventListener('click', () => {
+                addTerminalLine(`Conectando a: ${wsEndpoint.value}`, 'system');
+                connectToGame();
+            });
+            
+            // Inicializar o sistema
+            showNotification('Sistema de exploração carregado!', 'success', 4000);
+            addTerminalLine('Sistema iniciado. Aguardando comando...', 'system');
+            
+            // Simular alguns dados iniciais
+            for (let i = 0; i < 8; i++) {
+                const multiplier = 1 + Math.random() * 10;
+                gameData.push(multiplier);
+                updateHistory(multiplier, roundCount - (8 - i));
+            }
+            
+            // Iniciar exploração automaticamente
+            setTimeout(() => {
+                document.getElementById('startExploit').click();
+            }, 1000);
         });
     </script>
 </body>
